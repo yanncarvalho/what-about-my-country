@@ -1,0 +1,22 @@
+
+{
+    "id": "ABW",
+    "iso2Code": "AW",
+    "name": "Aruba",
+    "region": "Latin America & Caribbean ",
+    "incomeLevel": "High income",
+    "capitalCity": "Oranjestad",
+    "longitude": "-70.0167",
+    "latitude": "12.5167",
+		"accessToElectricity": {
+    "description": "Access to electricity (% of population)",
+    "date":{
+
+      "2020": 97.6999969482422
+     }
+    },
+    "giniIndex": {
+        "description": "Access to electricity (% of population)",
+        "2020": 97.6999969482422
+		}
+}
