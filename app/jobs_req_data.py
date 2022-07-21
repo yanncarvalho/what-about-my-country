@@ -1,81 +1,124 @@
+from http.client import responses
 import json
 import re
-from collections import ChainMap
-from http import client
 from os import getcwd as current_path
+
+import time
+#TODO colocar a requisição para ser feita - a primeira per_page = 1, ai pega o total e o lastupdate
+#TODO separar as coisas deste escript em outros arquivos
+#TODO configurar o redis, o acesso
+#TODO setar informações no redis
+#TODO criar rotina que baixa os sgv
+#TODO criar rotina que é executada dado uma periodicidade - para poder atualizar as bandeiras e as infos
+#TODO criar o endpoint
+#TODO implementar o GRAPHQL
+
+
+def current_milli_time():
+    return round(time.time() * 1000)
+inicial = current_milli_time()
+
+def _sanitize_string(str:str) -> str:
+    """
+    Remove unnecessary caracteries or change words
+    """
+    str = str.strip()
+
+    rule = lambda st: re.sub('\s*[SAR]*\s*,.*', '', st)
+
+    exceptions = {
+        "Congo, Dem. Rep.": "Democratic Republic of the Congo",
+        "Congo, Rep.": "Republic of the Congo",
+        "Korea, Dem. People's Rep.": "North Korea",
+        "Korea, Rep.": "South Korea",
+        "Bahamas, The": "The Bahamas",
+        "Population, total" : "Total population",
+        "Lao PDR": "Laos",
+        "St. Vincent and the Grenadines": "Saint Vincent and the Grenadines",
+        "St. Lucia": "Saint Lucia",
+        "St. Kitts and Nevis": "Saint Kitts and Nevis"
+    }
+
+    return exceptions[str] if str in exceptions.keys() else rule(str)
+
 
 # conn = client.HTTPSConnection('api.worldbank.org')
 # conn.request("GET", "/v2/country?format=Json&per_page=299")
 # response = conn.getresponse()
 # data = response.read().decode()
 countries = json.loads(open(
-    f"{current_path()}\\json\\countriesInformations.json", "r").read())
+    f"{current_path()}/json/countriesInformations.json", "r").read())
 
 eletricidade = json.loads(open(
-    f"{current_path()}\\json\\indicadorAcessoEletricidade.json", "r").read())
+    f"{current_path()}/json/indicadorAcessoEletricidade.json", "r").read())
 
-analfabetismo = json.loads(open(
-    f"{current_path()}\\json\\indicadorAnalfabetismo.json", "r").read())
+literacy_rate = json.loads(open(
+    f"{current_path()}/json/indicadorAlfabetizacao.json", "r").read())
 
 gini = json.loads(open(
-    f"{current_path()}\\json\\indicadorGini.json", "r").read())
+    f"{current_path()}/json/indicadorGini.json", "r").read())
 
 populacao = json.loads(open(
-    f"{current_path()}\\json\\indicadorPopulacao.json", "r").read())
+    f"{current_path()}/json/indicadorPopulacao.json", "r").read())
 
 renda = json.loads(open(
-    f"{current_path()}\\json\\indicadorRenda.json", "r").read())
+    f"{current_path()}/json/indicadorRenda.json", "r").read())
 
-# page = json.loads(countries_information)[0]
+
 result:dict = {}
 
-
-#remove valores nulos dropna
-
-if(countries[1][0]['incomeLevel']['value'] != 'Aggregate'):
-    result['id'] = countries[1][0]['id']
-    result['iso2Code'] = countries[1][0]['iso2Code']
-    result['name'] = countries[1][0]['name']
-    result['region'] = countries[1][0]['region']['value']
-    result['capitalCity'] = countries[1][0]['capitalCity']
-    result['longitude'] = countries[1][0]['longitude']
-    result['latitude'] = countries[1][0]['latitude']
-    result['incomeLevel'] = countries[1][0]['incomeLevel']['value']
 
 aux = {
     gini[1][1]['indicator']['id']: 'giniIndex',
     populacao[1][1]['indicator']['id']: 'totalPopulation',
-    analfabetismo[1][1]['indicator']['id'] : 'analfabetismo'
+    literacy_rate[1][1]['indicator']['id']: 'literacyRate',
+    renda[1][1]['indicator']['id']: 'GDP',
+    eletricidade[1][1]['indicator']['id']: 'eletricityAccess'
 }
-print(aux)
-a={}
-b={}
-gini = gini[1] + populacao[1] + analfabetismo[1]
+
+result:dict = {}
+responses = populacao[1]+eletricidade[1]+renda[1]+gini[1]+literacy_rate[1]
+
+for resp in responses:
+     value = resp['value']
+     if(value != None):
+       country_code = resp['countryiso3code']
+       description = _sanitize_string(resp['indicator']['value'])
+       indicator = aux[resp['indicator']['id']]
+
+       if(country_code not in result.keys()):
+          result[country_code] = {}
+
+       if(indicator not in result[country_code].keys()):
+           result[country_code].update(
+                                        {
+                                            indicator: {
+                                                 'description': description,
+                                                 'data': {}
+                                            }
+                                        }
+                                      )
+       result[country_code][indicator]['data'].update({resp['date']: value})
 
 
+for info in countries[1]:
+    if(info['incomeLevel']['value'] != 'Aggregates' and info['longitude'] != ''):
+        jsn = {
+            'id' : info['id'],
+            'iso2Code': info['iso2Code'],
+            'name': _sanitize_string(info['name']),
+            'region': _sanitize_string(info['region']['value']),
+            'capitalCity': _sanitize_string(info['capitalCity']),
+            'longitude': float(info['longitude']),
+            'latitude': float(info['latitude']),
+            'incomeLevel': _sanitize_string(info['incomeLevel']['value']),
+        }
 
-for gn in gini:
-     if(gn['value']):
-
-       if(gn['countryiso3code'] not in a.keys() ):
-          a[gn["countryiso3code"]] = {aux[gn['indicator']['id']]: {'description': gn['indicator']['value'], 'data': {}}}
-       elif(aux[gn['indicator']['id']] not in a[gn["countryiso3code"]].keys()):
-          a[gn["countryiso3code"]][aux[gn['indicator']['id']]] = {
-              'description': gn['indicator']['value'], 'data':{}}
-       a[gn["countryiso3code"]][aux[gn['indicator']['id']]]['data'].update(
-           {gn["date"]: gn["value"]})
-
-y = json.dumps(a, indent=4, sort_keys=True)
-file = open('teste.json', 'w')
-file.write(y)
-file.close()
-
-
-
-# primeiro faz a requisição do ano corrente, se for 0 faz do ano anterior até colnseguir o ultimo ano
-# se a quantidade de elementos for menor que o número da pagina, repete a rquisição enviando o total
-# primeiro pega o indicador de paises, e pega os códigos, exclui os que não tem região admin, assim so pega os paises
-# segundo vai pegando os outros indicadores s
-# se a informação no ano corrente for null pro pais é necessário fazer uma requisição especifica para o pais com todos os anos e ver o último ano não nulo
-# terceiro faz uma lista de paises e seta as bandeiras faz uma requisição grande para pegar as bandeiras
-# a as bandeiras faz uma requisição grande para pegar as bandeiras
+        if(jsn['id'] in result.keys()):
+            jsn.update(result[jsn['id']])
+        #TODO colocar log para saber que um tipo nao foi convertido
+        archive = json.dumps(jsn, indent=4)
+        file = open(f'/home/yann/what-about-my-country/app/final/{jsn["name"]}.json', 'w')
+        file.write(archive)
+        file.close()
+print(current_milli_time()-inicial)
