@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from http import client
 from http.client import HTTPSConnection
 import json

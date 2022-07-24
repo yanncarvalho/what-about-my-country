@@ -1,7 +1,0 @@
-{
-  "python.analysis.extraPaths": [
-    "./app",
-    "./helpers",
-    "./app/db"
-  ]
-}

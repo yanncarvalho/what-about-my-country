@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/python,redis,django,visualstudiocode
-# Edit at https://www.toptal.com/developers/gitignore?templates=python,redis,django,visualstudiocode
+# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,django,redis,python
+# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,django,redis,python
 
 ### Django ###
 *.log
@@ -283,4 +283,4 @@ cython_debug/
 # Ignore code-workspaces
 *.code-workspace
 
-# End of https://www.toptal.com/developers/gitignore/api/python,redis,django,visualstudiocode
+# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,django,redis,python
