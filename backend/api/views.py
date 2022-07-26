@@ -1,13 +1,12 @@
+from backend.api import helpers
 from django.http import HttpResponse
 from django.shortcuts import render
-
 from backend.api.models_country import Country
 
 def index(request):
-  return HttpResponse(Country.all_keys())
 
+  return HttpResponse(Country.get_from_internet('BR'))
 
-# VER O SUPER
-# AJEITAR O PADRÃO DE HELPER
-# CONFIGURAR PARA SETAR AS CHAVES
-# CRIAR O ENDPOINT QUE PEGA UMA SÓ REQUISIÇÃO
+#toda vez que não encontrar um dado = buscar na net
+#TODO fazer endpoints
+#TODO colocar graphql
