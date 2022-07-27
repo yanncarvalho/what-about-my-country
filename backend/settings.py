@@ -31,12 +31,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'backend.api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ariadne_django',
 ]
 
 MIDDLEWARE = [
@@ -92,13 +94,19 @@ STATIC_URL = 'static/'
 
 FROM_NET_KEY_TO_FIELD_VALUE: dict = {
     # api-key : dict-key
-    # 'NY.GDP.MKTP.CD': 'GDP',
-    #'SP.POP.TOTL': 'totalPopulation',
-    #    'SE.ADT.1524.LT.ZS': 'literacyRate',
-    #    'SI.POV.GINI': 'giniIndex',
-    #    'EG.ELC.ACCS.ZS': 'eletricityAccess'
+    'NY.GDP.MKTP.CD': 'GDP',
+    'SP.POP.TOTL': 'totalPopulation',
+    'SE.ADT.1524.LT.ZS': 'literacyRate',
+    'SI.POV.GINI': 'giniIndex',
+    'EG.ELC.ACCS.ZS': 'eletricityAccess'
 }
 BASIC_INFO_FIELD: str = 'basicInfo'
+
+#=---------------- REQUEST COUNTRY URL -----------------=#
+API_URL_ROOT: str = 'api.worldbank.org'
+API_VERSION: str = 'v2'
+API_COUNTRY_URL: str = '/'.join((API_VERSION, 'country'))
+API_INDICATOR_URL: str = 'indicator'
 
 #=---------------- REDIS SETTINGS -----------------=#
 REDIS = {

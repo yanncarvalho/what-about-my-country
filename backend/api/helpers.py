@@ -44,11 +44,15 @@ def _infos_filtered(indicators: list, indicatorApi_dictKey: dict) -> list:
                                         {
                                             indicator: {
                                                 'description': description,
-                                                'data': {}
+                                                'data': []
                                             }
                                         }
                                       )
-      result[country_code][indicator]['data'].update({indi['date']: value})
+
+      result[country_code][indicator]['data'].append({
+                                                      'year': int(indi['date']),
+                                                      'value': value
+                                                     })
   return result
 
 
@@ -97,8 +101,8 @@ def _countries_filtered(countries: list, field_name: str) -> dict:
 def _get_endpoint_wbank_itens_amount(conn: HTTPSConnection, request: str, http_method: str = 'GET') -> int:
     """Access the World bank API and the number of elements in a specific endpoint"""
     conn.request(http_method, f"/{request}?format=Json&per_page=1")
-    response = conn.getresponse()
-    data = json.loads(response.read().decode())
+    response = conn.getresponse().read().decode()
+    data = json.loads(response)
     return data[0]['total']
 
 
@@ -109,8 +113,8 @@ def _get_items_wbank_api(urlBaseApiHttps: str, requests: list, http_method: str 
     for req in requests:
         per_page = _get_endpoint_wbank_itens_amount(conn, req, http_method)
         conn.request(http_method, f"/{req}?format=Json&per_page={per_page}")
-        response = conn.getresponse()
-        json_resp = json.loads(response.read().decode())
+        response = conn.getresponse().read().decode()
+        json_resp = json.loads(response)
         data = json_resp[1]
         print("get world bank information from country iso2code ", req)
         result += data
@@ -118,22 +122,33 @@ def _get_items_wbank_api(urlBaseApiHttps: str, requests: list, http_method: str 
     return result
 
 
-def get_from_net(iso2code: str = '') -> dict:
+def get_keys_from_net() -> set:
+  api_url_root: str = conf.API_URL_ROOT
+  country_url: str = conf.API_COUNTRY_URL
+  basic_info: str = conf.BASIC_INFO_FIELD
 
-  api_url_root: str = 'api.worldbank.org'
-  api_version: str = 'v2'
-  country_url: str = '/'.join((api_version, 'country'))
-  indicator_url: str = 'indicator'
+  countries_n_regions: list = _get_items_wbank_api(api_url_root, {country_url})
+  countries: dict = _countries_filtered( countries_n_regions, basic_info)
+  return set(countries.keys())
+
+def get_from_net(iso2code: str = '') -> dict:
+  api_url_root: str = conf.API_URL_ROOT
+  country_url: str = conf.API_COUNTRY_URL
+  indicator_url: str = conf.API_INDICATOR_URL
+  basic_info: str = conf.BASIC_INFO_FIELD
+  from_net_to_field: dict  = conf.FROM_NET_KEY_TO_FIELD_VALUE
 
   countries_n_regions: list = _get_items_wbank_api( api_url_root, {'/'.join((country_url,iso2code))})
-  countries: dict = _countries_filtered(
-      countries_n_regions, conf.BASIC_INFO_FIELD)
+
+  countries: dict = _countries_filtered(countries_n_regions, basic_info)
+
   for key in countries.keys():
+
       urls: set = {'/'.join((country_url, key, indicator_url, str(indicator)))
-              for indicator in conf.FROM_NET_KEY_TO_FIELD_VALUE.keys()}
+                   for indicator in from_net_to_field.keys()}
       if urls:
         country_infos = _get_items_wbank_api(api_url_root, urls)
         infos_filter = _infos_filtered(
-            country_infos, conf.FROM_NET_KEY_TO_FIELD_VALUE)
+            country_infos, from_net_to_field)
         countries[key].update(infos_filter[key])
   return countries

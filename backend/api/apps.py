@@ -1,10 +1,13 @@
 from django.apps import AppConfig
 
-class ApiConfig(AppConfig):
-    name: str = 'api'
-    verbose_name: str = "country api"
 
+class ApiConfig(AppConfig):
+    name = 'backend.api'
+    verbose_name = 'countries info api'
+    start = False
     def ready(self) -> None:
-        from . import populate_db
-        populate_db.countries()
-        return super().ready()
+        if not self.start:
+            self.start = True
+            from backend import populate_db
+            populate_db.countries()
+

@@ -13,10 +13,12 @@ class Field:
     self.__id = field_id
     self.__info = info
 
-  def get_info(self) -> dict:
+  @property
+  def info(self) -> dict:
     return self.__info
 
-  def get_id(self) -> str:
+  @property
+  def id(self) -> str:
     return self.__id
 
   def __str__(self) -> str:
@@ -42,11 +44,18 @@ class RedisModel:
     return Field(field_id, info)
 
   def save(self, fields: list) -> None:
-    for field in fields:
-      redis.hset(self.__key,
-               field.get_id(), json.dumps(field.get_info()))
+    dict_field = {field.id: json.dumps(field.info) for field in fields}
+    redis.hmset(self.__key, mapping=dict_field)
+
+  def delete(self) -> None:
+    redis.delete(self.__key)
+
+  @staticmethod
+  def del_keys_by_pattern(pattern: str) -> None:
+    for key in redis.scan_iter(pattern+":*"):
+      redis.delete(key)
 
   @staticmethod
   def all_keys(id_reference: str) -> list:
     id_reference = id_reference + ':'
-    return [key.replace(id_reference, '') for key in redis.keys(id_reference+'*')]
+    return [key.replace(id_reference, '') for key in redis.scan_iter(id_reference+'*')]
