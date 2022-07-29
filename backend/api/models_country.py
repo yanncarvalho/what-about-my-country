@@ -1,10 +1,12 @@
+import asyncio
+
 from backend.api import helpers, models
 from django.conf import settings as conf
 
 
 class Country(models.RedisModel):
 
-  _REDIS_COUNTRIES_ID: str = 'api:country:iso2code'
+  _REDIS_COUNTRIES_ID: str = 'api:country:iso3code'
 
   def __init__(self, country_code: str):
     self.__code = country_code
@@ -46,17 +48,21 @@ class Country(models.RedisModel):
   def save(self) -> None:
     return super().save(self.__fields)
 
-  def set_fields_from_internet(self) -> None:
-    from_net = helpers.get_from_net(self.__code)
+
+  @classmethod
+  async def save_from_net(cls, code) -> None:
+    from_net = await helpers.get_from_net(code)
     from_net_fields = [models.Field(k, v)
-                       for k, v in from_net[self.__code].items()]
-    self.set_fields(from_net_fields)
+                       for k, v in from_net.items()]
+    country  = cls(code)
+    country.set_fields(from_net_fields)
+    country.save()
 
   def is_empty(self) -> bool:
     return not bool(self.get_fields())
 
   @staticmethod
-  def all_keys_from_internet() -> set:
+  def all_keys_from_net() -> set:
     return helpers.get_keys_from_net()
 
   @staticmethod
@@ -71,4 +77,3 @@ class Country(models.RedisModel):
   def all_fields_keys() -> set:
     return set(conf.FROM_NET_KEY_TO_FIELD_VALUE.values()).union(
         {conf.BASIC_INFO_FIELD})
-

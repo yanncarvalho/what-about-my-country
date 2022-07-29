@@ -22,5 +22,6 @@ urlpatterns = [
 
     path('', GraphQLView.as_view(schema=schema.schema)),
 
-
 ]
+
+

@@ -1,3 +1,4 @@
+import asyncio
 from ariadne import ObjectType, make_executable_schema
 from django.conf import settings as conf
 from .models import Field
@@ -14,6 +15,7 @@ type_defs = """
     }
 
     type Country {
+        id: String
         name: String,
         region: String,
         capitalCity: String,
@@ -24,6 +26,7 @@ type_defs = """
     }
 
     type Field{
+        id: String,
         description: String,
         data (minYear: Int!): [Data]
     }
@@ -36,7 +39,7 @@ type_defs = """
     enum Fields {fields}
     enum Codes {codes_enum}
 """.format(fields = _from_set_to_str_enum(__fields_id),
-           codes_enum = _from_set_to_str_enum(Country.all_keys_from_internet()))
+           codes_enum = _from_set_to_str_enum(Country.all_keys_from_net()))
 
 query = ObjectType('Query')
 
@@ -46,8 +49,7 @@ def resolve_country(*_, code):
     for cd in code:
         country = Country(cd)
         if(country.is_empty()):
-            country.set_fields_from_internet()
-            country.save()
+            asyncio.run(country.save_from_net(cd))
         fields = country.get_fields()
         fields_list.append(fields)
     return fields_list
@@ -55,6 +57,7 @@ def resolve_country(*_, code):
 
 country = ObjectType('Country')
 
+@country.field('id')
 @country.field('incomeLevel')
 @country.field('latitude')
 @country.field('longitude')
@@ -74,8 +77,10 @@ def resolve_fields(obj, _, id):
 field = ObjectType('Field')
 
 @field.field('description')
-def resolve_description(field, _):
-    return field.info['description']
+@field.field('id')
+def resolve_description(field, info):
+    value = info.field_name
+    return field.info[value]
 
 @field.field('data')
 def resolve_data(fields, _, minYear:int):

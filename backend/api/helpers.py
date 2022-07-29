@@ -1,8 +1,13 @@
+import asyncio
 import json
 import re
 from http import client
 from http.client import HTTPSConnection
+
+
+import aiohttp
 from django.conf import settings as conf
+
 
 def _sanitize_string(str:str) -> str:
   """Remove unnecessary caracteries or change words"""
@@ -32,7 +37,7 @@ def _infos_filtered(indicators: list, indicatorApi_dictKey: dict) -> list:
   for indi in indicators:
     value = indi['value']
     if(value != None):
-      country_code = indi['country']['id']
+      country_code = indi['countryiso3code']
       description = _sanitize_string(indi['indicator']['value'])
       indicator = indicatorApi_dictKey[indi['indicator']['id']]
 
@@ -43,6 +48,7 @@ def _infos_filtered(indicators: list, indicatorApi_dictKey: dict) -> list:
           result[country_code].update(
                                         {
                                             indicator: {
+                                                'id': indicator,
                                                 'description': description,
                                                 'data': []
                                             }
@@ -55,8 +61,24 @@ def _infos_filtered(indicators: list, indicatorApi_dictKey: dict) -> list:
                                                      })
   return result
 
+def _is_valid_country(country: dict) -> bool:
+  basic_data = {'id',
+                'name',
+                'region',
+                'capitalCity',
+                'longitude',
+                'latitude',
+                'incomeLevel'}
 
-def _countries_filtered(countries: list, field_name: str) -> dict:
+
+  has_basic_data = basic_data.issubset(set(country.keys()))
+  has_value_in_keys = 'value' in country['region'].keys() and 'value' in country['incomeLevel'].keys()
+  is_a_country = country['incomeLevel']['value'] != 'Aggregates' and country['longitude'] != ''
+  return has_basic_data and has_value_in_keys and is_a_country
+
+
+
+def _country_normalize(country: dict, field_name: str) -> dict:
   """Dict of countries informations from world bank where key are iso2code.
 
   Args:
@@ -73,82 +95,80 @@ def _countries_filtered(countries: list, field_name: str) -> dict:
       }]\n
 
   Returns:
-    FILTERD Dict of countries informations from world bank where key are iso2code
+    FILTERD Dict of countries informations from world bank where key are
 
-  Raises:
-    Exception: if countries do not have the basic struct."""
-  try:
-    result: dict = {}
-    for info in countries:
-      if(info['incomeLevel']['value'] != 'Aggregates' and info['longitude'] != ''):
-          id = info['iso2Code']
-          aux = {
-              field_name: {
-              'name': _sanitize_string(info['name']),
-              'region': _sanitize_string(info['region']['value']),
-              'capitalCity': _sanitize_string(info['capitalCity']),
-              'longitude': float(info['longitude']),
-              'latitude': float(info['latitude']),
-              'incomeLevel': _sanitize_string(info['incomeLevel']['value']),
-            }
-          }
-          result.update({id : aux})
-  except Exception:
-      raise Exception('countries do not have all elements necessary')
+ """
+
+  result = { field_name: {
+                'id': _sanitize_string(country['id']),
+                'name': _sanitize_string(country['name']),
+                'region': _sanitize_string(country['region']['value']),
+                'capitalCity': _sanitize_string(country['capitalCity']),
+                'longitude': float(country['longitude']),
+                'latitude': float(country['latitude']),
+                'incomeLevel': _sanitize_string(country['incomeLevel']['value']),
+            } }
+
   return result
 
 
-def _get_endpoint_wbank_itens_amount(conn: HTTPSConnection, request: str, http_method: str = 'GET') -> int:
+
+async def _get_endpoint_wbank_itens_amount(session, url_base: str) -> int:
     """Access the World bank API and the number of elements in a specific endpoint"""
-    conn.request(http_method, f"/{request}?format=Json&per_page=1")
-    response = conn.getresponse().read().decode()
-    data = json.loads(response)
-    return data[0]['total']
+    url = f"{url_base}&per_page=1"
+    async with session.get(url) as resp:
+        json_resp = await resp.json()
+        return json_resp[0]['total']
 
-
-def _get_items_wbank_api(urlBaseApiHttps: str, requests: list, http_method: str = 'GET') -> list:
+async def _get_items_wbank_api(urlBaseApiHttps: str, requests: list) -> list:
     """ Access the World Bank API and return a tuple with request data at first element are data requited and second one is the last update of the API"""
-    conn = client.HTTPSConnection(urlBaseApiHttps)
     result: list = []
-    for req in requests:
-        per_page = _get_endpoint_wbank_itens_amount(conn, req, http_method)
-        conn.request(http_method, f"/{req}?format=Json&per_page={per_page}")
-        response = conn.getresponse().read().decode()
-        json_resp = json.loads(response)
-        data = json_resp[1]
-        print("get world bank information from country iso2code ", req)
-        result += data
-    conn.close()
+
+    async with aiohttp.ClientSession() as session:
+
+      for req in requests:
+          url_base = f"https://{urlBaseApiHttps}/{req}?format=Json"
+          per_page = await _get_endpoint_wbank_itens_amount(session, url_base)
+          url = f"{url_base}&per_page={per_page}"
+          async with session.get(url) as resp:
+            json_resp = await resp.json()
+            data = json_resp[1]
+            result += data
     return result
 
 
 def get_keys_from_net() -> set:
   api_url_root: str = conf.API_URL_ROOT
   country_url: str = conf.API_COUNTRY_URL
-  basic_info: str = conf.BASIC_INFO_FIELD
 
-  countries_n_regions: list = _get_items_wbank_api(api_url_root, {country_url})
-  countries: dict = _countries_filtered( countries_n_regions, basic_info)
-  return set(countries.keys())
+  countries_n_regions: list = asyncio.run(_get_items_wbank_api(api_url_root, {country_url}))
+  countries_keys = {val['id'] for val in countries_n_regions
+                    if _is_valid_country(val)}
 
-def get_from_net(iso2code: str = '') -> dict:
+  return countries_keys
+
+
+async def get_from_net(key: str) -> dict:
+
+  if type(key) != str or key == '':
+      raise Exception('code has be a string, with some caracter')
+  print(key)
   api_url_root: str = conf.API_URL_ROOT
   country_url: str = conf.API_COUNTRY_URL
   indicator_url: str = conf.API_INDICATOR_URL
   basic_info: str = conf.BASIC_INFO_FIELD
   from_net_to_field: dict  = conf.FROM_NET_KEY_TO_FIELD_VALUE
 
-  countries_n_regions: list = _get_items_wbank_api( api_url_root, {'/'.join((country_url,iso2code))})
+  country: dict = (await _get_items_wbank_api(api_url_root, {'/'.join((country_url, key))}))[0]
+  country_filtered: dict = _country_normalize(country, basic_info)
 
-  countries: dict = _countries_filtered(countries_n_regions, basic_info)
+  urls: set = {'/'.join((country_url, key, indicator_url, str(indicator)))
+               for indicator in from_net_to_field.keys()}
 
-  for key in countries.keys():
+  if urls:
+    country_infos = await _get_items_wbank_api(api_url_root, urls)
+    infos_filter = _infos_filtered(country_infos, from_net_to_field)
+    country_filtered.update(infos_filter[key])
 
-      urls: set = {'/'.join((country_url, key, indicator_url, str(indicator)))
-                   for indicator in from_net_to_field.keys()}
-      if urls:
-        country_infos = _get_items_wbank_api(api_url_root, urls)
-        infos_filter = _infos_filtered(
-            country_infos, from_net_to_field)
-        countries[key].update(infos_filter[key])
-  return countries
+  return country_filtered
+
