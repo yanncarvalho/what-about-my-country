@@ -1,7 +1,7 @@
 import json
-
 import redis
 from django.conf import settings
+from .observer import ObserverDB
 
 redis = redis.Redis(port=settings.REDIS['port'],
                     charset=settings.REDIS['charset'],
@@ -27,7 +27,7 @@ class Field:
   def __repr__(self) -> str:
     return f'{self.__info}'
 
-class RedisModel:
+class RedisModel(ObserverDB):
 
   def __init__(self, key: str) -> None:
      self.__key = key
@@ -46,6 +46,7 @@ class RedisModel:
   def save(self, fields: list) -> None:
     dict_field = {field.id: json.dumps(field.info) for field in fields}
     redis.hmset(self.__key, mapping=dict_field)
+    super().save()
 
   def delete(self) -> None:
     redis.delete(self.__key)
