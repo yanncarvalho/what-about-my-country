@@ -1,7 +1,5 @@
 class ObserverDB :
 
-  def save (self):
-      from backend.populate_db import Populate
-      Populate().start()
-
-
+  def save (self) -> None:
+    from backend.populate import Populate
+    Populate().start()

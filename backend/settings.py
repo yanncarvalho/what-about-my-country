@@ -9,8 +9,8 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
 from pathlib import Path
+from typing import Any, Dict
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+TEST_RUNNER = 'backend.api.tests.tesd.MyTestRunner'
 # Application definition
 
 INSTALLED_APPS = [
@@ -72,8 +72,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -85,32 +83,32 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
+STATIC_URL: str = 'static/'
 
 
 #=---------------- COUNTRY API SETTINGS -----------------=#
-
-FROM_NET_KEY_TO_FIELD_VALUE: dict = {
+API_INDICATOR_URL: str = 'indicator'
+API_BASIC_INFO_URL: str = ''
+FROM_NET_KEY_TO_DICT_VALUE: Dict[str, str] = {
     # api-key : dict-key
-    'NY.GDP.MKTP.CD': 'GDP',
-    'SP.POP.TOTL': 'totalPopulation',
-    'SE.ADT.1524.LT.ZS': 'literacyRate',
-    'SI.POV.GINI': 'giniIndex',
-    'EG.ELC.ACCS.ZS': 'eletricityAccess'
+    API_BASIC_INFO_URL                    : 'basicInfo',
+    API_INDICATOR_URL+'/NY.GDP.MKTP.CD'   : 'GDP',
+    API_INDICATOR_URL+'/SP.POP.TOTL'      : 'totalPopulation',
+    API_INDICATOR_URL+'/SE.ADT.1524.LT.ZS': 'literacyRate',
+    API_INDICATOR_URL+'/SI.POV.GINI'      : 'giniIndex',
+    API_INDICATOR_URL+'/EG.ELC.ACCS.ZS'   : 'eletricityAccess'
 }
-BASIC_INFO_FIELD: str = 'basicInfo'
 
-#=---------------- REQUEST COUNTRY URL -----------------=#
 API_URL_ROOT: str = 'api.worldbank.org'
 API_VERSION: str = 'v2'
 API_COUNTRY_URL: str = '/'.join((API_VERSION, 'country'))
-API_INDICATOR_URL: str = 'indicator'
+
 
 #=---------------- REDIS SETTINGS -----------------=#
-REDIS = {
+REDIS: Dict[str, Any] = {
     'port': 6379,
     'charset' : 'utf-8',
-    'decode_responses' : True
+    'decode_responses' : True,
+    'expire_key_in_days': 10
 }

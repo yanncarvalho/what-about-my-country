@@ -1,51 +1,66 @@
 import asyncio
-from ariadne import ObjectType, make_executable_schema
+from typing import Dict, List, Set
+
+from ariadne import ObjectType, SchemaDirectiveVisitor, make_executable_schema
 from django.conf import settings as conf
+from graphql import GraphQLError, default_field_resolver
+
 from .models import Field
 from .models_country import Country
 
-def _from_set_to_str_enum (val: set) -> str:
-   return str(val).replace("'", "")
 
-__fields_id  = set(conf.FROM_NET_KEY_TO_FIELD_VALUE.values())
+def _from_set_to_str_enum(value: set) -> str:
+    return str(value).replace("'", "")
 
-type_defs = """
+
+__fields: Dict[str, str] = dict(conf.FROM_NET_KEY_TO_DICT_VALUE)
+__fields.pop(conf.API_BASIC_INFO_URL, None)
+__fields_id: Set[str] = set(__fields.values())
+
+schema_graphql = '''
+
+    directive @zeroOrPositive on ARGUMENT_DEFINITION
+
     type Query {
-        country(code: [Codes!]!): [Country]
+        country(code: [Codes!]!): [Country!]
     }
 
     type Country {
-        id: String
-        name: String,
-        region: String,
-        capitalCity: String,
-        longitude: Float,
-        latitude: Float,
-        incomeLevel: String,
-        fields(id:[Fields!]!): [Field]
+        id: String!
+        name: String!
+        region: String!
+        capitalCity: String!
+        longitude: Float!
+        latitude: Float!
+        incomeLevel: String!
+        indicators(id:[IndicatorsId!]!): [Indicator!]
     }
 
-    type Field{
-        id: String,
-        description: String,
-        data (minYear: Int!): [Data]
+    type Indicator{
+        id: String!
+        description: String!
+        data (minYear: Int! = 0 @zeroOrPositive): [Data!]
     }
 
     type Data{
         year: Int!
         value: Float!
     }
-""" + """
-    enum Fields {fields}
+
+''' + '''
+    enum IndicatorsId {fields}
     enum Codes {codes_enum}
-""".format(fields = _from_set_to_str_enum(__fields_id),
-           codes_enum = _from_set_to_str_enum(Country.all_keys_from_net()))
+'''.format(
+    fields=_from_set_to_str_enum(
+      __fields_id),
+    codes_enum=_from_set_to_str_enum(Country.all_keys_from_net()))
 
 query = ObjectType('Query')
 
+
 @query.field('country')
-def resolve_country(*_, code):
-    fields_list: list = []
+def _resolve_country(*_, code):
+    fields_list: List[Field] = []
     for cd in code:
         country = Country(cd)
         if(country.is_empty()):
@@ -57,6 +72,7 @@ def resolve_country(*_, code):
 
 country = ObjectType('Country')
 
+
 @country.field('id')
 @country.field('incomeLevel')
 @country.field('latitude')
@@ -64,39 +80,64 @@ country = ObjectType('Country')
 @country.field('capitalCity')
 @country.field('region')
 @country.field('name')
-def resolve_country(fields,  info):
+def _resolve_country_elements(fields, info):
     value = info.field_name
-    field: Field = fields[conf.BASIC_INFO_FIELD]
+    field: Field = fields[conf.FROM_NET_KEY_TO_DICT_VALUE[conf.API_BASIC_INFO_URL]]
     return field.info[value]
 
-@country.field('fields')
-def resolve_fields(obj, _, id):
-    fiedls_filtered = [ obj[i] for i in id if i in obj.keys() ]
-    return fiedls_filtered
+@country.field('indicators')
+def _resolve_indicators(indicators, _, id):
+    indicators_filtered = [indicators[i] for i in id if i in indicators.keys()]
+    return indicators_filtered
 
-field = ObjectType('Field')
+indicator = ObjectType('Indicator')
 
-@field.field('description')
-@field.field('id')
-def resolve_description(field, info):
+@indicator.field('description')
+@indicator.field('id')
+def _resolve_indicator(indicartor, info):
     value = info.field_name
-    return field.info[value]
+    return indicartor.info[value]
 
-@field.field('data')
-def resolve_data(fields, _, minYear:int):
-   if minYear < 0:
-    raise ValueError("only positive numbers are allowed")
-   else:
-    data_filtered = [ date for date in fields.info['data']
-                      if date['year'] >= minYear ]
-   return data_filtered
+
+@indicator.field('data')
+def _resolve_data(indicators, _, minYear: int):
+    data_filtered = [date for date in indicators.info['data']
+                     if date['year'] >= minYear]
+    return data_filtered
+
 
 data = ObjectType('Data')
 
+
 @data.field('value')
 @data.field('year')
-def resolve_year(data, info):
+def _resolve_data_elements(data, info):
     value = info.field_name
     return data[value]
 
-schema = make_executable_schema(type_defs, query, country, field, data)
+
+def format_error(error: GraphQLError, *_) -> dict:
+
+    formatted = error.formatted
+    formatted.pop('path', None)
+    return formatted
+
+
+class ZeroOrPositiveDirective(SchemaDirectiveVisitor):
+
+    def visit_argument_definition(self, argument, field, _):
+        original_resolver = field.resolve or default_field_resolver
+
+        def resolve_or_raise_error_if_negative(obj, info,  **kwargs):
+            for key, val in kwargs.items():
+                if val < 0:
+                    raise ValueError(f"{key} has to be equal zero or positive")
+            return original_resolver(obj, info, **kwargs)
+
+        field.resolve = resolve_or_raise_error_if_negative
+        return argument
+
+
+schema = make_executable_schema(
+    schema_graphql, query, country, indicator, data,
+    directives={'zeroOrPositive': ZeroOrPositiveDirective})

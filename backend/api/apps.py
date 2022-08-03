@@ -1,10 +1,9 @@
-import os
 from django.apps import AppConfig
-
+from backend.api.factory import RedisFactory
 
 class ApiConfig(AppConfig):
-    name = 'backend.api'
-    verbose_name = 'countries info api'
+    name: str = 'backend.api'
+    verbose_name: str = 'countries info api'
+
     def ready(self) -> None:
-        from backend.populate_db import Populate
-        Populate().start()
+        RedisFactory.redis_connected_or_exception()
