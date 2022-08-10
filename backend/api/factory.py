@@ -4,6 +4,7 @@ from typing import Union
 from django.conf import settings as conf
 from redis import Redis
 
+import logging
 
 class RedisFactory(Redis):
 
@@ -15,7 +16,9 @@ class RedisFactory(Redis):
     super().__init__(
                   port=redis_conf['port'],
                   charset=redis_conf['charset'],
-                  decode_responses=redis_conf['decode_responses'])
+                  decode_responses=redis_conf['decode_responses'],
+                  username=redis_conf['username'],
+                  password=redis_conf['password'])
 
     #create time expire key
     conv_days_to_sec: int = lambda days: days * 24 * 60 * 60
@@ -41,6 +44,8 @@ class RedisFactory(Redis):
 
     For more information see https://redis.io/commands/expire
     """
+    logging.info(
+        f'it has been set timeout {self.__redis_expire_in_secs} to key {name}')
     return super().expire(name = name,
                           time = self.__redis_expire_in_secs,
                           nx = nx,
@@ -56,4 +61,5 @@ class RedisFactory(Redis):
     try:
       cls().ping()
     except Exception as error:
+        logging.critical('redis is not connecting')
         raise RuntimeError('redis is not connecting') from error

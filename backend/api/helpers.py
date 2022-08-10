@@ -3,6 +3,7 @@ import re
 from typing import *
 import aiohttp
 from django.conf import settings as conf
+import logging
 
 def _sanitize_string(value: str) -> str:
   """ Remove unnecessary caracteries and change words
@@ -73,7 +74,7 @@ def _indicators_normalize(indicators: List[Dict[str, str]],
                                           'value': value
                                         })
     except Exception:
-        print('It was not able to normalize '+ indi)
+       logging.error(f'Could not normalize: {indi}')
   return result
 
 def _is_valid_country(country: Dict[str, str]) -> bool:
@@ -132,7 +133,7 @@ def _country_basic_info_normalize(country: Dict[str, object], field_name: str) -
                  'incomeLevel': _sanitize_string(country['incomeLevel']['value']),
              }}
   except Exception:
-        pass
+      logging.error(f'Could not normalize country: {country}')
   return result
 
 
@@ -155,9 +156,10 @@ async def _request_wbank_api(session: aiohttp.ClientSession,
     url = f"https://{urlBaseApiHttps}/{req}?format=Json&per_page={per_page}"
     async with session.get(url) as resp:
         json_resp = await resp.json()
+        logging.info(f'requesting url: {url}')
         return json_resp
   except Exception:
-    pass
+    logging.error(f'error trying to request: {url}')
 
 async def _get_items_wbank_api(urlBaseApiHttps: str, requests: Sequence[str]) -> List[Dict[str, str]]:
   """ Access World Bank API and return a list all elements required
@@ -178,7 +180,7 @@ async def _get_items_wbank_api(urlBaseApiHttps: str, requests: Sequence[str]) ->
         data: List[object] = await _request_wbank_api(session, urlBaseApiHttps, req, per_page)
         result += data[1]
       except Exception:
-        pass
+        logging.error(f'error trying to request: {req}')
   return result
 
 
@@ -209,7 +211,8 @@ async def get_from_net(key: str) -> Dict[str, Dict[str, object]]:
     ValueError: An error ocorred if the key is not a String or is an empty string
   """
   if not isinstance(key, str) or key.replace(' ', '') == '':
-      raise ValueError('code has be a string with some character')
+      logging.critical(f'code "{key}" must be a string with some character')
+      raise ValueError('code must be a string with some character')
 
   api_url_root: str = conf.API_URL_ROOT
   country_url: str = conf.API_COUNTRY_URL

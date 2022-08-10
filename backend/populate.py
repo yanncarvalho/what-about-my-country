@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from ast import List
 from threading import Thread
 from typing import Coroutine, Set
@@ -32,6 +33,7 @@ class Populate(Thread):
 
   def start_populations(self):
     """start the population itself"""
+    logging.info('database population has been started')
     Populate.start_countries()
 
 

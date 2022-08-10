@@ -1,5 +1,6 @@
 import json
 from typing import Any, Dict, List
+import logging
 
 from .observer import ObserverDB
 from .factory import RedisFactory
@@ -46,13 +47,15 @@ class RedisModel(ObserverDB):
     if len(fields) > 0:
       dict_field: Dict[str, Field] = {field.id: json.dumps(field.info) for field in fields}
       RedisModel.redis.expire(self.__key)
+      logging.info(f'saving new information in redis, with key {self.__key}')
       RedisModel.redis.hmset(self.__key, mapping=dict_field)
       super().save()
     else:
-      print('empty fields try to be save into redis')#TODO log
+      logging.error('empty fields try to be save in redis')
 
   @staticmethod
   def del_keys_by_pattern(pattern: str) -> None:
     """delete information from the database that match the specific pattern"""
     for key in RedisModel.redis.scan_iter(pattern+":*"):
+      logging.info(f'delete information from redis with key {key}')
       RedisModel.redis.delete(key)
