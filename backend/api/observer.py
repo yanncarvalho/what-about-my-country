@@ -3,5 +3,5 @@ class ObserverDB :
 
   def save (self) -> None:
     """trigger a process when new information is saved to a database"""
-    from backend.populate import Populate
+    from .populate import Populate
     Populate().start()

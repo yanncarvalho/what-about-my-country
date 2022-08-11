@@ -1,11 +1,8 @@
 import asyncio
 import logging
-from ast import List
 from threading import Thread
-from typing import Coroutine, Set
-
-from .api.models_country import Country
-
+from typing import Coroutine, List, Set
+from .models_country import Country
 
 class Populate(Thread):
   """Populate class implemention methods to populate the database"""
@@ -19,24 +16,21 @@ class Populate(Thread):
      Populate._is_population = False
 
   @staticmethod
-  def start_countries():
-    """start the country Pppulation"""
-    async def countries(keys: Set[str]):
-      """populate database with information from all countries"""
-      requests_async: List[Coroutine] = \
+  def start_countries() -> None:
+    """start the country Population"""
+    keys: Set[str] = Country.all_keys_from_net()
+    try:
+      async def async_countries(keys: Set[str]):
+       requests_async: List[Coroutine] = \
         [Country.save_from_net(key) for key in keys]
-      await asyncio.gather(*requests_async)
-      Populate._is_population = False
+       return await asyncio.gather(*requests_async)
 
-    keys = Country.all_keys_from_net()
-    asyncio.run(countries(keys))
+      asyncio.run(async_countries(keys))
+    except Exception as e:
+     logging.error("Could not populate database with countries information", e)
 
-  def start_populations(self):
+  def start_populations(self) -> None:
     """start the population itself"""
     logging.info('database population has been started')
     Populate.start_countries()
-
-
-
-
 

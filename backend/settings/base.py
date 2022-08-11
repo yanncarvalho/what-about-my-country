@@ -11,24 +11,12 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 from pathlib import Path
-from typing import Any, Dict
+from typing import Dict, Union
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-p121ah##ig1$ir^b%+176k=j@5ikdvha%*bkr87$-&jeue+j=k'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
-# Application definition
 
 INSTALLED_APPS = [
     'backend.api.apps.ApiConfig',
@@ -84,8 +72,7 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL: str = 'static/'
-
+STATIC_URL = 'static/'
 
 #=---------------- COUNTRY API SETTINGS -----------------=#
 API_INDICATOR_URL: str = 'indicator'
@@ -106,50 +93,14 @@ API_COUNTRY_URL: str = '/'.join((API_VERSION, 'country'))
 
 
 #=---------------- REDIS SETTINGS -----------------=#
-REDIS: Dict[str, Any] = {
-    'port': 6379,
-    'charset' : 'utf-8',
-    'decode_responses' : True,
-    'expire_key_in_days': 10
-}
-
-#=---------------- LOGGING SETTINGS -----------------=#
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'log_file': {
-
-            'class': 'logging.FileHandler',
-            'filename': 'api.log',
-            'formatter': 'verbose',
-        },
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-        },
-    },
-    'root': {
-        'handlers': ['console'],
-    },
-    'backend.api': {
-        'handlers': ['log_file'],
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-            'propagate': False,
-        },
-    },
+RedisVal = Union[str, bool, int]
+REDIS: Dict[str, RedisVal] = {
+    'host': os.getenv('REDIS_HOST'),
+    'port': int(os.getenv('REDIS_PORT')),
+    'charset': os.getenv('REDIS_CHARSET','utf-8'),
+    'decode_responses': os.getenv('REDIS_DECODE_RESPONSES', 'True').lower() == 'true',
+    'expire_key_in_days': int(os.getenv('REDIS_EXPIRE_KEY_IN_DAYS', '10')),
+    'username': os.getenv('REDIS_USERNAME'),
+    'password': os.getenv('REDIS_PASSWORD'),
+    'db': int(os.getenv('REDIS_DB', '1')),
 }

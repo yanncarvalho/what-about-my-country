@@ -1,10 +1,8 @@
 import asyncio
 from typing import Dict, List, Set
-
 from ariadne import ObjectType, SchemaDirectiveVisitor, make_executable_schema
 from django.conf import settings as conf
 from graphql import GraphQLError, default_field_resolver
-
 from .models import Field
 from .models_country import Country
 
@@ -26,14 +24,12 @@ __fields.pop(conf.API_BASIC_INFO_URL, None)
 __fields_id: Set[str] = set(__fields.values())
 
 schema_graphql = '''
-
     directive @zeroOrPositive on ARGUMENT_DEFINITION
 
     type Query {
         "country request - code in iso3code"
         country(code: [Codes!]!): [Country!]
     }
-
 
     """
     Get some information about a particular country from [World Bank API] (https://data.worldbank.org/)

@@ -1,7 +1,6 @@
 import json
 from typing import Any, Dict, List
 import logging
-
 from .observer import ObserverDB
 from .factory import RedisFactory
 

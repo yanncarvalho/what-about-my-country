@@ -5,5 +5,5 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
      self.stdout.write('start to populate Redis')
-     from backend.populate import Populate
+     from backend.api.populate import Populate
      Populate().start()

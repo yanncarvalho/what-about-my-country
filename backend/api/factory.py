@@ -10,16 +10,16 @@ class RedisFactory(Redis):
 
   def __init__(self):
     """initialize redis db"""
-
     redis_conf = conf.REDIS
 
     super().__init__(
+                  db=redis_conf['db'],
+                  host=redis_conf['host'],
                   port=redis_conf['port'],
                   charset=redis_conf['charset'],
                   decode_responses=redis_conf['decode_responses'],
                   username=redis_conf['username'],
                   password=redis_conf['password'])
-
     #create time expire key
     conv_days_to_sec: int = lambda days: days * 24 * 60 * 60
     expire_in_days: int = redis_conf['expire_key_in_days']

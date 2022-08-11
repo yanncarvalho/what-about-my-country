@@ -1,9 +1,11 @@
 import asyncio
 import re
-from typing import *
+from typing import Any, Dict, List, Optional, Sequence, Set, Union
 import aiohttp
 from django.conf import settings as conf
 import logging
+
+CountryAPIRequest =  Dict[str, Union[int, float, str]]
 
 def _sanitize_string(value: str) -> str:
   """ Remove unnecessary caracteries and change words
@@ -33,7 +35,7 @@ def _sanitize_string(value: str) -> str:
 
 
 def _indicators_normalize(indicators: List[Dict[str, str]],
-                    indicatorApi_dictKey: Dict[str, str]) -> Dict[str, Dict[str, object]]:
+                          indicatorApi_dictKey: Dict[str, str]) -> Dict[str, CountryAPIRequest]:
   """ Convert a list of indicators from World Bank API into a dictionary with filtered elements
 
   Args:
@@ -51,7 +53,7 @@ def _indicators_normalize(indicators: List[Dict[str, str]],
   Returns:
     A dictionary with filtered and rearranged indicators information, whose each dictionary key is the ID of the local indicator
   """
-  result: Dict[str, object] = {}
+  result: Dict[str, CountryAPIRequest] = {}
   for indi in indicators:
     try:
       value: int = indi['value']
@@ -77,14 +79,15 @@ def _indicators_normalize(indicators: List[Dict[str, str]],
        logging.error(f'Could not normalize: {indi}')
   return result
 
-def _is_valid_country(country: Dict[str, str]) -> bool:
+
+def _is_valid_country(country: CountryAPIRequest) -> bool:
   """ Check if a country is valid
 
   Args:
   - country: a dictionary with country information
 
   Returns:
-    True ifthe country is valid, False if not
+    True if the country is valid, False if not
   """
   basic_data: Set[str] = {'id',
                           'name',
@@ -101,7 +104,8 @@ def _is_valid_country(country: Dict[str, str]) -> bool:
 
   return has_basic_data and has_value_in_keys and is_country
 
-def _country_basic_info_normalize(country: Dict[str, object], field_name: str) -> Dict[str, Dict[str, Union[str, float]]]:
+
+def _country_basic_info_normalize(country: CountryAPIRequest, field_name: str) -> Dict[str, CountryAPIRequest]:
   """ Convert a dictionary with basic world bank country information to a dictionary with filtered elements
 
   Args:
@@ -122,7 +126,7 @@ def _country_basic_info_normalize(country: Dict[str, object], field_name: str) -
     A dictionary where the key is field_name paramater and its value is a dictionary with filtered basic country information
   """
   try:
-   result: Dict[str, Dict[str, object]] = \
+   result: Dict[str, CountryAPIRequest] = \
            {field_name: {
                  'id': _sanitize_string(country['id']),
                  'name': _sanitize_string(country['name']),
@@ -140,7 +144,7 @@ def _country_basic_info_normalize(country: Dict[str, object], field_name: str) -
 async def _request_wbank_api(session: aiohttp.ClientSession,
                             urlBaseApiHttps: str,
                             req: str,
-                            per_page: int) -> List[object]:
+                             per_page: int) -> List[CountryAPIRequest]:
   """ Access the World bank API and the number of elements in a specific endpoint
 
   Args:
@@ -161,7 +165,8 @@ async def _request_wbank_api(session: aiohttp.ClientSession,
   except Exception:
     logging.error(f'error trying to request: {url}')
 
-async def _get_items_wbank_api(urlBaseApiHttps: str, requests: Sequence[str]) -> List[Dict[str, str]]:
+
+async def _get_items_wbank_api(urlBaseApiHttps: str, requests: Sequence[str]) -> List[CountryAPIRequest]:
   """ Access World Bank API and return a list all elements required
 
   Args:
@@ -171,13 +176,13 @@ async def _get_items_wbank_api(urlBaseApiHttps: str, requests: Sequence[str]) ->
   Returns:
     A list with all required elements which got a response, in case of no response, returns an empty list
   """
-  result: List[object] = []
+  result: List[CountryAPIRequest] = []
   async with aiohttp.ClientSession() as session:
     for req in requests:
       try:
-        amount_items: List[object] = await _request_wbank_api(session, urlBaseApiHttps, req, per_page=1)
+        amount_items: List[CountryAPIRequest] = await _request_wbank_api(session, urlBaseApiHttps, req, per_page=1)
         per_page: int = amount_items[0]['total']
-        data: List[object] = await _request_wbank_api(session, urlBaseApiHttps, req, per_page)
+        data: List[CountryAPIRequest] = await _request_wbank_api(session, urlBaseApiHttps, req, per_page)
         result += data[1]
       except Exception:
         logging.error(f'error trying to request: {req}')
@@ -192,12 +197,14 @@ def get_keys_from_net() -> Set[str]:
   """
   api_url_root: str = conf.API_URL_ROOT
   country_url: str = conf.API_COUNTRY_URL
-  countries_n_regions: List[Dict[str, str]] = asyncio.run(_get_items_wbank_api(api_url_root, {country_url}))
+  countries_n_regions: List[CountryAPIRequest] = asyncio.run(
+      _get_items_wbank_api(api_url_root, {country_url}))
   countries_keys: Set[str] = {val['id'] for val in countries_n_regions
                                         if _is_valid_country(val)}
   return countries_keys
 
-async def get_from_net(key: str) -> Dict[str, Dict[str, object]]:
+
+async def get_from_net(key: str) -> Optional[CountryAPIRequest]:
   """ request basic country information from the World Bank API and returns iso3code IDs
 
   Args:
@@ -222,7 +229,7 @@ async def get_from_net(key: str) -> Dict[str, Dict[str, object]]:
   urls: List[str] = {indicator: '/'.join((country_url, key, str(indicator)))
                      for indicator in from_net_to_dict.keys()}
   index_basic_info: int = list(urls.keys()).index(basic_info_id)
-  country_normalized: Dict[str, Dict[str, object]] = {}
+
 
   if urls:
 
@@ -231,11 +238,12 @@ async def get_from_net(key: str) -> Dict[str, Dict[str, object]]:
     if bool(country):
       basic_info: Dict[str, object] = country.pop(index_basic_info)
 
-      country_normalized = \
+      country_normalized: Dict[str, CountryAPIRequest] =\
           _country_basic_info_normalize(basic_info, from_net_to_dict[basic_info_id])
 
       if len(country) >= 1:
-        infos_filtered: Dict[str, Dict[str, object]] = _indicators_normalize(country, from_net_to_dict)
+        infos_filtered: Dict[str, CountryAPIRequest] = _indicators_normalize(
+            country, from_net_to_dict)
         country_normalized.update(infos_filtered)
 
   return country_normalized

@@ -1,6 +1,5 @@
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Optional
 from backend.api import helpers, models
-
 
 class Country:
   """Country class represeting database data and World Bank API."""
@@ -23,7 +22,7 @@ class Country:
   @classmethod
   async def save_from_net(cls, country_code: str) -> None:
     """save a country with its iso3code id from World Bank API in the database."""
-    from_net: Dict[str, Dict[str, object]] = await helpers.get_from_net(country_code)
+    from_net: Optional[helpers.CountryAPIRequest] = await helpers.get_from_net(country_code)
     from_net_fields: List[models.Field] = \
       [models.Field(k, v) for k, v in from_net.items()]
     cls(country_code)._database.save(from_net_fields)
