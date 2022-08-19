@@ -1,6 +1,6 @@
 import asyncio
 import re
-from typing import Any, Dict, List, Optional, Sequence, Set, Union
+from typing import Dict, List, Optional, Sequence, Set, Union
 import aiohttp
 from django.conf import settings as conf
 import logging
@@ -246,4 +246,4 @@ async def get_from_net(key: str) -> Optional[CountryAPIRequest]:
             country, from_net_to_dict)
         country_normalized.update(infos_filtered)
 
-  return country_normalized
+      return country_normalized

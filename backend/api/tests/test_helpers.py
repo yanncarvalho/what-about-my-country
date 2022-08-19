@@ -1,6 +1,6 @@
 import asyncio
-from typing import Dict, Set
-from django.test import SimpleTestCase
+from typing import Optional, Set
+from django.test import SimpleTestCase, tag
 from backend.api import helpers
 
 class HelpersTest(SimpleTestCase):
@@ -13,8 +13,10 @@ class HelpersTest(SimpleTestCase):
       self.assertIsInstance(key, str, f'{key} is not a String')
 
   def test_if_get_from_net_then_success(self):
-    key: str = 'CYP'
-    country: Dict[str, Dict[str, object]] = asyncio.run(helpers.get_from_net(key))
+    key: str = 'CYP' #any country
+    country: Optional[helpers.CountryAPIRequest] = asyncio.run(
+        helpers.get_from_net(key))
+
     self.assertIsInstance(country, dict, 'country is not a dictionary')
     self.assertNotEqual(len(country), 0,  'country is empty')
 
@@ -23,17 +25,16 @@ class HelpersTest(SimpleTestCase):
         self.assertIs(type(value), dict, f'value {value} must be a dictionary')
 
   def test_if_get_from_net_with_empty_key_then_exception(self):
-    key: str = ''
+    key: str = ''  # none
     with self.assertRaises(ValueError):
       asyncio.run(helpers.get_from_net(key))
 
   def test_if_get_from_net_with_invalid_key_then_exception(self):
-    key: int = 1
+    key: int = 1  # wrong type
     with self.assertRaises(ValueError):
       asyncio.run(helpers.get_from_net(key))
 
   def test_if_get_from_net_with_non_exist_key_then_empty_dict(self):
     key: str = 'INVALID'
-    country: Dict[str, Dict[str, object]] = asyncio.run(helpers.get_from_net(key))
-    self.assertIsInstance(country, dict, 'keys is not a set')
-    self.assertEqual(len(country), 0, 'keys is  not empty')
+    country: Optional[helpers.CountryAPIRequest] = asyncio.run(helpers.get_from_net(key))
+    self.assertIs(country, None, 'country is not None')
