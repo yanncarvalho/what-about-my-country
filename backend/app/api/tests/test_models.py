@@ -1,6 +1,6 @@
 from unittest.mock import  Mock, patch
 from django.test import SimpleTestCase
-from backend.api import models, factory
+from app.api import models, factory
 
 class RedisModelTest(SimpleTestCase):
 
@@ -44,7 +44,7 @@ class RedisModelTest(SimpleTestCase):
     self.RedisModel(self.key).save(fake_empty_fields)
     self.mock_redis.expire.assert_not_called()
 
-  @patch('backend.api.observer.ObserverDB.save')
+  @patch('app.api.observer.ObserverDB.save')
   def test_if_save_then_calls_observer_save(self, observerdb_save):
     fake_fields = [models.Field('ANY', {})]
     self.RedisModel(self.key).save(fake_fields)

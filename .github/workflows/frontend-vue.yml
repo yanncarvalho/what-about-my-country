@@ -1,0 +1,32 @@
+name: frontend
+
+on:
+  push:
+    branches: [ "main", "feature/add-frontend" ]
+  pull_request:
+    branches: [ "main", "feature/add-frontend" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    env:
+      frontend-directory: ./frontend
+    defaults:
+      run:
+        working-directory: ${{env.frontend-directory}}/
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: '${{env.frontend-directory}}/package-lock.json'
+    - run: npm ci
+    - run: npm run build
+

@@ -1,7 +1,7 @@
 import json
 from typing import Dict, List, Tuple, Union
 from ariadne import graphql_sync
-from backend.api import schema
+from app.api import schema
 from django.conf import settings as conf
 from django.http import JsonResponse
 from django.views import View

@@ -2,19 +2,22 @@ name: backend
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feature/add-frontend" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "feature/add-frontend" ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    env:
+      backend-directory: ./backend
+    defaults:
+      run:
+        working-directory: ${{env.backend-directory}}
     strategy:
       max-parallel: 4
       matrix:
         python-version: [3.8]
-
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}

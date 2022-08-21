@@ -36,7 +36,7 @@ LOGGING = {
     'root': {
         'handlers': ['console'],
     },
-    'backend.api': {
+    'app.api': {
         'handlers': ['log_file'],
     },
     'loggers': {

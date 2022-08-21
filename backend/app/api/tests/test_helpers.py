@@ -1,7 +1,7 @@
 import asyncio
 from typing import Optional, Set
 from django.test import SimpleTestCase, tag
-from backend.api import helpers
+from app.api import helpers
 
 class HelpersTest(SimpleTestCase):
 

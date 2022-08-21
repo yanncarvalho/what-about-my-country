@@ -1,9 +1,9 @@
 import os
 from django.apps import AppConfig
-from backend.api.factory import RedisFactory
+from app.api.factory import RedisFactory
 
 class ApiConfig(AppConfig):
-    name: str = 'backend.api'
+    name: str = 'app.api'
     verbose_name: str = 'countries info api'
 
     def ready(self) -> None:

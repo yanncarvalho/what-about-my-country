@@ -1,5 +1,5 @@
 from typing import Dict, List, Set, Optional
-from backend.api import helpers, models
+from app.api import helpers, models
 
 class Country:
   """Country class represeting database data and World Bank API."""
