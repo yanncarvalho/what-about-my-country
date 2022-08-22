@@ -17,10 +17,8 @@ class CountryTest(SimpleTestCase):
     async def override_get_from_net(key):
       await mock_get_from_net(key)
       return {}
-
     helpers.get_from_net = override_get_from_net
     asyncio.run(self.Country.save_from_net(self.key))
-
     redis_save.assert_called()
     mock_get_from_net.assert_awaited()
 
