@@ -1,9 +1,7 @@
 import asyncio
 from django.test import SimpleTestCase
 from unittest.mock import AsyncMock, patch
-
 from backend.api import helpers, models_country
-
 
 class CountryTest(SimpleTestCase):
 
@@ -17,10 +15,9 @@ class CountryTest(SimpleTestCase):
     async def override_get_from_net(key):
       await mock_get_from_net(key)
       return {}
-
     helpers.get_from_net = override_get_from_net
+    
     asyncio.run(self.Country.save_from_net(self.key))
-
     redis_save.assert_called()
     mock_get_from_net.assert_awaited()
 

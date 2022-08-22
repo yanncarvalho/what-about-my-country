@@ -19,7 +19,6 @@ class RedisModelTest(SimpleTestCase):
   def test_if_del_keys_by_pattern_then_calls_redis_delete(self):
     def override_scan_iter(*args, **kwargs):
       return [self.key]
-
     self.mock_redis.scan_iter = override_scan_iter
     self.RedisModel.del_keys_by_pattern(self.key)
     self.mock_redis.delete.assert_called()
@@ -41,6 +40,7 @@ class RedisModelTest(SimpleTestCase):
 
   def test_if_save_with_empty_fields_then_not_calls_redis_expire(self):
     fake_empty_fields = []
+    self.mock_redis.expire = Mock()
     self.RedisModel(self.key).save(fake_empty_fields)
     self.mock_redis.expire.assert_not_called()
 

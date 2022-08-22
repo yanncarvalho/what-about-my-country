@@ -1,7 +1,5 @@
 from unittest.mock import Mock, patch
-
 from django.test import SimpleTestCase
-
 from backend.api.populate import Populate
 
 class PopulateDBTest(SimpleTestCase):
