@@ -28,6 +28,28 @@ body {
   background-color: var(--color-primary-40);
 }
 
+:-webkit-input-placeholder {
+    color:  var(--color-text);
+}
+:-moz-placeholder {
+   color:   var(--color-text);
+   opacity:  1;
+}
+::-moz-placeholder {
+   color:  var(--color-text);
+   opacity:  1;
+}
+:-ms-input-placeholder {
+   color: var(--color-text);
+}
+::-ms-input-placeholder {
+   color: var(--color-text);
+}
+
+::placeholder {
+   color: var(--color-text);
+}
+
 @media screen and (max-width: 880px) {
   .img-880-resize {
     width: 65px;

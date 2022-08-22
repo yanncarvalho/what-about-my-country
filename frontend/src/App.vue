@@ -1,6 +1,7 @@
 <script setup>
 import SocialMediaLink from "./components/SocialMediaLink.vue";
 import HeaderLogo from "./components/HeaderLogo.vue";
+import DataList from "./components/TheDatalist.vue";
 </script>
 
 <template>
@@ -28,8 +29,12 @@ import HeaderLogo from "./components/HeaderLogo.vue";
           </a>
         </p>
       </section>
+
     </div>
+      <DataList />  
+
   </main>
+
   <footer
     class="bg-headfoot p-3 text-center container-fluid d-sm-inline-flex justify-content-center align-items-center"
   >
