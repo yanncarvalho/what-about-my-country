@@ -9,7 +9,27 @@ import HeaderLogo from "./components/HeaderLogo.vue";
   >
     <HeaderLogo />
   </header>
-
+  <main>
+    <div class="bg-section p-1 mb-4">
+      <section
+        class="container text-center text-lg-start pe-0"
+        aria-labelledby="section-text"
+      >
+        <h1 class="h1 fw-bold" id="section-text">What is this site about?</h1>
+        <p>
+          Do you want to know information about your country? This site will
+          help you.
+          <br />
+          We provide information from the World Bank database and create graphs
+          with this information.
+          <br />
+          <a href="https://databank.worldbank.org/" target="_blank">
+            Read more about World Bank database
+          </a>
+        </p>
+      </section>
+    </div>
+  </main>
   <footer
     class="bg-headfoot p-3 text-center container-fluid d-sm-inline-flex justify-content-center align-items-center"
   >

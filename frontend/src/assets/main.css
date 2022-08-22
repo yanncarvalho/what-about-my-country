@@ -1,21 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand&Fredoka+One');
-:root{
-   --color-background: #E6E6E6;
-   --color-text: #1A1A1A;
-   --font-base:'Quicksand';
-   --font-title: 'Fredoka One';
+
+:root {
+  --color-grey-20: #E6E6E6;
+  --color-grey-40: #B5BDBF;
+  --color-text: #1A1A1A;
+
+  --color-primary-40: #EFE1CE;
+  --color-primary-70: #E4CAA9;
+  --color-primary-100: #D8B384;
+
+  --color-secondary-100: #79CDA4;
+  --font-base: 'Quicksand';
+  --font-title: 'Fredoka One';
 }
 
 body {
   color: var(--color-text);
-  background: var(--color-background);
+  background: var(--color-grey-20);
   font-family: var(--font-base);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 .bg-headfoot {
-  background-color: #79CDA4;
+  background-color: var(--color-secondary-100);
+}
+
+.bg-section {
+  background-color: var(--color-primary-40);
 }
 
 @media screen and (max-width: 880px) {
