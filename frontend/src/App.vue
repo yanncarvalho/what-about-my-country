@@ -1,7 +1,7 @@
 <script setup>
 import SocialMediaLink from "./components/SocialMediaLink.vue";
 import HeaderLogo from "./components/HeaderLogo.vue";
-import DataList from "./components/TheDatalist.vue";
+import ItensSelection from "./components/ItensSelection.vue";
 </script>
 
 <template>
@@ -29,10 +29,8 @@ import DataList from "./components/TheDatalist.vue";
           </a>
         </p>
       </section>
-
     </div>
-      <DataList />  
-
+    <ItensSelection />
   </main>
 
   <footer
