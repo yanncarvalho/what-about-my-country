@@ -30,7 +30,8 @@ import ItensSelection from "./components/ItensSelection.vue";
         </p>
       </section>
     </div>
-    <ItensSelection />
+    <ItensSelection label="Country" placeholder="Choose a Country" />
+    <ItensSelection label="Indicator" placeholder="Choose an Indicator" />
   </main>
 
   <footer

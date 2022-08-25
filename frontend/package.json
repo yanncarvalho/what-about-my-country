@@ -9,12 +9,16 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@apollo/client": "^3.6.9",
     "bootstrap": "^5.2.0",
+    "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6",
     "vue": "^3.2.37"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
     "@vitejs/plugin-vue": "^3.0.1",
+    "@voerro/vue-tagsinput": "^2.7.1",
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/test-utils": "^2.0.2",
     "eslint": "^8.21.0",
