@@ -8,7 +8,7 @@ class PopulateDBTest(SimpleTestCase):
     self.Populate = Populate
 
   @patch('backend.api.models_country.Country.save_from_net')
-  @patch('backend.api.models_country.Country.all_keys_from_net', return_value = [])
+  @patch('backend.api.models_country.Country.all_keys_n_name_from_net', return_value = [])
   def test_if_start_countries_then_calls_country_save_from_net(self, country_save_from_net, _):
     self.Populate.start_countries()
     country_save_from_net.assert_called()

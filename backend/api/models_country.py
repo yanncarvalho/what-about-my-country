@@ -1,5 +1,7 @@
-from typing import Dict, List, Set, Optional
+from typing import Dict, List, Optional, Set, Tuple
+
 from backend.api import helpers, models
+
 
 class Country:
   """Country class represeting database data and World Bank API."""
@@ -28,9 +30,9 @@ class Country:
     cls(country_code)._database.save(from_net_fields)
 
   @staticmethod
-  def all_keys_from_net() -> Set[str]:
-    """get country iso3code id from World Bank API"""
-    return helpers.get_keys_from_net()
+  def all_keys_n_name_from_net() -> Tuple[Dict[str,str]]:
+    """get a tuple of dictionaries with iso3code id (key = id) and country name (key = name) from World Bank API"""
+    return helpers.get_keys_n_name_from_net()
 
   @staticmethod
   def del_all_countries() -> None:

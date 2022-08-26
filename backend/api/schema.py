@@ -7,7 +7,7 @@ from .models import Field
 from .models_country import Country
 
 
-def _from_set_to_str_enum(value: set) -> str:
+def _from_set_to_str_enum(value: Dict[str, str]) -> str:
     """ convert a set to a String
 
     Args:
@@ -16,7 +16,11 @@ def _from_set_to_str_enum(value: set) -> str:
     Returns:
       Set to a String by removing apostrophes
     """
-    return str(value).replace("'", "")
+    resp: str = ""
+    for val, decr in value.items():
+        aux = f'"{decr}"\n{val}\n'
+        resp += aux
+    return resp
 
 
 __fields: Dict[str, str] = dict(conf.FROM_NET_KEY_TO_DICT_VALUE)
@@ -98,7 +102,7 @@ schema_graphql = '''
 '''.format(
     fields=_from_set_to_str_enum(
       __fields_id),  # dynamic field formatting for graphql request
-    codes_enum=_from_set_to_str_enum(Country.all_keys_from_net()))  # dynamic country id  formatting for graphql request
+    codes_enum=_from_set_to_str_enum(dict(Country.all_keys_n_name_from_net().values())))  # dynamic country id  formatting for graphql request
 
 query = ObjectType('Query')
 

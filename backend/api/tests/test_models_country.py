@@ -16,7 +16,7 @@ class CountryTest(SimpleTestCase):
       await mock_get_from_net(key)
       return {}
     helpers.get_from_net = override_get_from_net
-    
+
     asyncio.run(self.Country.save_from_net(self.key))
     redis_save.assert_called()
     mock_get_from_net.assert_awaited()
@@ -26,9 +26,9 @@ class CountryTest(SimpleTestCase):
     self.Country(self.key).get_fields()
     redis_get_fields.assert_called()
 
-  @patch('backend.api.helpers.get_keys_from_net')
+  @patch('backend.api.helpers.get_keys_n_name_from_net')
   def test_if_all_keys_from_net_then_calls_helpers_get_keys_from_net(self, helpers_get_keys_from_net):
-    self.Country.all_keys_from_net()
+    self.Country.all_keys_n_name_from_net()
     helpers_get_keys_from_net.assert_called()
 
   @patch('backend.api.models.RedisModel.get_fields', return_value=[])
