@@ -205,7 +205,7 @@ def get_keys_n_name_from_net() -> Tuple[Dict[str,str]]:
       _get_items_wbank_api(api_url_root, {country_url}))
 
   countries_keys_n_name: Tuple[str, Dict[str,str]] = \
-              tuple({'id': val['id'], 'name': val['name']}
+      tuple({'id': val['id'], 'name': _sanitize_string(val['name'])}
                 for val in countries_n_regions
                 if _is_valid_country(val))
 
@@ -232,7 +232,7 @@ async def get_from_net(key: str) -> Optional[CountryAPIRequest]:
   api_url_root: str = conf.API_URL_ROOT
   country_url: str = conf.API_COUNTRY_URL
   basic_info_id: str = conf.API_BASIC_INFO_URL
-  from_net_to_dict: Dict[str, str] = conf.FROM_NET_KEY_TO_DICT_VALUE
+  from_net_to_dict: Dict[str, str] = { k:v['id'] for k, v in conf.FROM_NET_KEY_TO_DICT_VALUE.items()}
 
   urls: List[str] = {indicator: '/'.join((country_url, key, str(indicator)))
                      for indicator in from_net_to_dict.keys()}

@@ -1,5 +1,5 @@
 import asyncio
-from typing import Dict, List, Set
+from typing import Dict, List, Tuple
 from ariadne import ObjectType, SchemaDirectiveVisitor, make_executable_schema
 from django.conf import settings as conf
 from graphql import GraphQLError, default_field_resolver
@@ -7,32 +7,33 @@ from .models import Field
 from .models_country import Country
 
 
-def _from_set_to_str_enum(value: Dict[str, str]) -> str:
-    """ convert a set to a String
+def _from_tuple_to_str_enum(value: Tuple[Dict[str, str]]) -> str:
+    """ convert a tuple of dictionary with keys id and name to a graphql enum with description
 
     Args:
-    - value: Set that will be converted into a String
+    - value: Tuple of dictionary with keys id and name that will be converted into a String
 
     Returns:
-      Set to a String by removing apostrophes
+      String converted
     """
-    resp: str = ""
-    for val, decr in value.items():
-        aux = f'"{decr}"\n{val}\n'
+    resp: str = "{"
+    for val in value:
+        aux = f"\"{val['name']}\"{val['id']}"
         resp += aux
+    resp += "}"
     return resp
 
 
 __fields: Dict[str, str] = dict(conf.FROM_NET_KEY_TO_DICT_VALUE)
 __fields.pop(conf.API_BASIC_INFO_URL, None)
-__fields_id: Set[str] = set(__fields.values())
+__fields_id: Tuple[Dict[str, str]] = tuple(__fields.values())
 
 schema_graphql = '''
     directive @zeroOrPositive on ARGUMENT_DEFINITION
 
     type Query {
         "country request - code in iso3code"
-        country(code: [Codes!]!): [Country!]
+        country(codes: [Code!]!): [Country!]
     }
 
     """
@@ -40,7 +41,7 @@ schema_graphql = '''
     """
     type Country {
         "id in iso3code"
-         id: String!
+        id: String!
 
         "country name"
         name: String!
@@ -61,7 +62,7 @@ schema_graphql = '''
         incomeLevel: String!
 
         "country indicators"
-        indicators(id:[IndicatorsId!]!): [Indicator!]
+        indicators(ids:[IndicatorId!]!): [Indicator!]
     }
 
     """
@@ -93,22 +94,22 @@ schema_graphql = '''
     """
     Enumerator with all possible country indicators
     """
-    enum IndicatorsId {fields}
+    enum IndicatorId {fields}
 
     """
     Country [iso3Code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)
     """
-    enum Codes {codes_enum}
+    enum Code {codes_enum}
 '''.format(
-    fields=_from_set_to_str_enum(
-      __fields_id),  # dynamic field formatting for graphql request
-    codes_enum=_from_set_to_str_enum(dict(Country.all_keys_n_name_from_net().values())))  # dynamic country id  formatting for graphql request
+    fields=_from_tuple_to_str_enum(
+        __fields_id),  # dynamic field formatting for graphql request
+    codes_enum=_from_tuple_to_str_enum(Country.all_keys_n_name_from_net()))  # dynamic country id  formatting for graphql request
 
 query = ObjectType('Query')
 
 
 @query.field('country')
-def _resolve_country(*_, code):
+def _resolve_country(*_, codes):
     """ GraphQL Query country resolve
       Args:
       - code: country iso3code id
@@ -117,7 +118,7 @@ def _resolve_country(*_, code):
           List of country fields
     """
     fields_list: List[Field] = []
-    for cd in code:
+    for cd in codes:
         country = Country(cd)
         if(country.is_empty()):
             asyncio.run(country.save_from_net(cd))
@@ -147,11 +148,13 @@ def _resolve_country_elements(fields, info):
         Requested field element
     """
     value = info.field_name
-    field: Field = fields[conf.FROM_NET_KEY_TO_DICT_VALUE[conf.API_BASIC_INFO_URL]]
+    key: Dict[str, str] = conf.FROM_NET_KEY_TO_DICT_VALUE[conf.API_BASIC_INFO_URL]
+    field: Field = fields[key['id']]
     return field.info[value]
 
+
 @country.field('indicators')
-def _resolve_indicators(indicators, _, id):
+def _resolve_indicators(indicators, _, ids):
     """ GraphQL type country indicators resolve
 
       Args:
@@ -161,10 +164,12 @@ def _resolve_indicators(indicators, _, id):
       Returns:
         Requested indicators element
     """
-    indicators_filtered = [indicators[i] for i in id if i in indicators.keys()]
+    indicators_filtered = [indicators[i] for i in ids if i in indicators.keys()]
     return indicators_filtered
 
+
 indicator = ObjectType('Indicator')
+
 
 @indicator.field('description')
 @indicator.field('id')
@@ -226,6 +231,7 @@ def format_error(error: GraphQLError, *_) -> dict:
 
 class ZeroOrPositiveDirective(SchemaDirectiveVisitor):
     """ZeroOrPositiveDirective sets GraphQL directive to @zeroOrPositive"""
+
     def visit_argument_definition(self, argument, field, _):
         original_resolver = field.resolve or default_field_resolver
 
