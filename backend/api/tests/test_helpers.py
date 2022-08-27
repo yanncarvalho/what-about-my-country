@@ -26,7 +26,6 @@ class HelpersTest(SimpleTestCase):
   def test_if_get_keys_n_name_from_net_then_success(self):
    helpers._get_items_wbank_api = self.override_get_items_wbank_api
    keys_n_name: Tuple[Dict[str,str]] = helpers.get_keys_n_name_from_net()
-   print(type(keys_n_name))
    self.assertIsInstance(keys_n_name, tuple, 'keys_n_name is not a tuple')
    self.assertNotEqual(len(keys_n_name), 0, 'keys_n_name is empty')
    for key in keys_n_name:
