@@ -1,6 +1,6 @@
 import asyncio
 import re
-from typing import Dict, List, Optional, Sequence, Set, Union
+from typing import Dict, List, Optional, Sequence, Set, Tuple, Union
 import aiohttp
 from django.conf import settings as conf
 import logging
@@ -189,19 +189,27 @@ async def _get_items_wbank_api(urlBaseApiHttps: str, requests: Sequence[str]) ->
   return result
 
 
-def get_keys_from_net() -> Set[str]:
-  """ Request to World Bank API basic countries information and return them iso3code IDs
+def get_keys_n_name_from_net() -> Tuple[Dict[str,str]]:
+  """ Request to World Bank API basic countries information and return them iso3code IDs and country names
 
   Returns:
-    A set with country iso3code IDs
+   A tuple of dictionaries with:\n
+   {
+    \tid: country iso3code ID
+    \tname: country name\n
+   }
   """
   api_url_root: str = conf.API_URL_ROOT
   country_url: str = conf.API_COUNTRY_URL
   countries_n_regions: List[CountryAPIRequest] = asyncio.run(
       _get_items_wbank_api(api_url_root, {country_url}))
-  countries_keys: Set[str] = {val['id'] for val in countries_n_regions
-                                        if _is_valid_country(val)}
-  return countries_keys
+
+  countries_keys_n_name: Tuple[str, Dict[str,str]] = \
+      tuple({'id': val['id'], 'name': _sanitize_string(val['name'])}
+                for val in countries_n_regions
+                if _is_valid_country(val))
+
+  return countries_keys_n_name
 
 
 async def get_from_net(key: str) -> Optional[CountryAPIRequest]:
@@ -224,7 +232,7 @@ async def get_from_net(key: str) -> Optional[CountryAPIRequest]:
   api_url_root: str = conf.API_URL_ROOT
   country_url: str = conf.API_COUNTRY_URL
   basic_info_id: str = conf.API_BASIC_INFO_URL
-  from_net_to_dict: Dict[str, str] = conf.FROM_NET_KEY_TO_DICT_VALUE
+  from_net_to_dict: Dict[str, str] = { k:v['id'] for k, v in conf.FROM_NET_KEY_TO_DICT_VALUE.items()}
 
   urls: List[str] = {indicator: '/'.join((country_url, key, str(indicator)))
                      for indicator in from_net_to_dict.keys()}

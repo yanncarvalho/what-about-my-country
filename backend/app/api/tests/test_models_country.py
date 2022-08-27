@@ -1,8 +1,8 @@
 import asyncio
-from django.test import SimpleTestCase
 from unittest.mock import AsyncMock, patch
 
 from app.api import helpers, models_country
+from django.test import SimpleTestCase
 
 
 class CountryTest(SimpleTestCase):
@@ -27,10 +27,10 @@ class CountryTest(SimpleTestCase):
     self.Country(self.key).get_fields()
     redis_get_fields.assert_called()
 
-  @patch('app.api.helpers.get_keys_from_net')
-  def test_if_all_keys_from_net_then_calls_helpers_get_keys_from_net(self, helpers_get_keys_from_net):
-    self.Country.all_keys_from_net()
-    helpers_get_keys_from_net.assert_called()
+  @patch('app.api.helpers.get_keys_n_name_from_net')
+  def test_if_all_keys_from_net_then_calls_helpers_get_keys_from_net(self, helpers_get_keys_n_name_from_net):
+    self.Country.all_keys_n_name_from_net()
+    helpers_get_keys_n_name_from_net.assert_called()
 
   @patch('app.api.models.RedisModel.get_fields', return_value=[])
   def test_if_is_empty_returns_True(self, _):

@@ -1,5 +1,5 @@
 import asyncio
-from typing import Optional, Set
+from typing import Dict, Optional, Set, Tuple
 from django.test import SimpleTestCase
 from app.api import helpers
 
@@ -23,13 +23,14 @@ class HelpersTest(SimpleTestCase):
    self.override_get_items_wbank_api_return_None = override_get_items_wbank_api_return_None
 
 
-  def test_if_get_keys_from_net_then_success(self):
+  def test_if_get_keys_n_name_from_net_then_success(self):
    helpers._get_items_wbank_api = self.override_get_items_wbank_api
-   keys: Set[str] = helpers.get_keys_from_net()
-   self.assertIsInstance(keys, set, 'keys is not a set')
-   self.assertNotEqual(len(keys), 0, 'keys is empty')
-   for key in keys:
-    self.assertIsInstance(key, str, f'{key} is not a String')
+   keys_n_name: Tuple[Dict[str,str]] = helpers.get_keys_n_name_from_net()
+   self.assertIsInstance(keys_n_name, tuple, 'keys_n_name is not a tuple')
+   self.assertNotEqual(len(keys_n_name), 0, 'keys_n_name is empty')
+   for key in keys_n_name:
+    self.assertIsInstance(key['id'], str, f'{key["id"]} is not a String')
+    self.assertIsInstance(key['name'], str, f'{key["name"]} is not a String')
 
   def test_if_get_from_net_then_success(self):
     key: str = 'Test' #any country

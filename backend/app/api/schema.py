@@ -1,5 +1,5 @@
 import asyncio
-from typing import Dict, List, Set
+from typing import Dict, List, Tuple
 from ariadne import ObjectType, SchemaDirectiveVisitor, make_executable_schema
 from django.conf import settings as conf
 from graphql import GraphQLError, default_field_resolver
@@ -7,28 +7,33 @@ from .models import Field
 from .models_country import Country
 
 
-def _from_set_to_str_enum(value: set) -> str:
-    """ convert a set to a String
+def _from_tuple_to_str_enum(value: Tuple[Dict[str, str]]) -> str:
+    """ convert a tuple of dictionary with keys id and name to a graphql enum with description
 
     Args:
-    - value: Set that will be converted into a String
+    - value: Tuple of dictionary with keys id and name that will be converted into a String
 
     Returns:
-      Set to a String by removing apostrophes
+      String converted
     """
-    return str(value).replace("'", "")
+    resp: str = "{"
+    for val in value:
+        aux = f"\"{val['name']}\"{val['id']}"
+        resp += aux
+    resp += "}"
+    return resp
 
 
 __fields: Dict[str, str] = dict(conf.FROM_NET_KEY_TO_DICT_VALUE)
 __fields.pop(conf.API_BASIC_INFO_URL, None)
-__fields_id: Set[str] = set(__fields.values())
+__fields_id: Tuple[Dict[str,str]] = tuple(__fields.values())
 
 schema_graphql = '''
     directive @zeroOrPositive on ARGUMENT_DEFINITION
 
     type Query {
         "country request - code in iso3code"
-        country(code: [Codes!]!): [Country!]
+        country(codes: [Code!]!): [Country!]
     }
 
     """
@@ -36,7 +41,7 @@ schema_graphql = '''
     """
     type Country {
         "id in iso3code"
-         id: String!
+        id: String!
 
         "country name"
         name: String!
@@ -57,7 +62,7 @@ schema_graphql = '''
         incomeLevel: String!
 
         "country indicators"
-        indicators(id:[IndicatorsId!]!): [Indicator!]
+        indicators(ids:[IndicatorId!]!): [Indicator!]
     }
 
     """
@@ -89,16 +94,15 @@ schema_graphql = '''
     """
     Enumerator with all possible country indicators
     """
-    enum IndicatorsId {fields}
+    enum IndicatorId {fields}
 
     """
     Country [iso3Code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)
     """
-    enum Codes {codes_enum}
+    enum Code {codes_enum}
 '''.format(
-    fields=_from_set_to_str_enum(
-      __fields_id),  # dynamic field formatting for graphql request
-    codes_enum=_from_set_to_str_enum(Country.all_keys_from_net()))  # dynamic country id  formatting for graphql request
+    fields = _from_tuple_to_str_enum(__fields_id),  # dynamic field formatting for graphql request
+    codes_enum = _from_tuple_to_str_enum(Country.all_keys_n_name_from_net()))  # dynamic country id  formatting for graphql request
 
 query = ObjectType('Query')
 
