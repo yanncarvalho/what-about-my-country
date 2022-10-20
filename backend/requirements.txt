@@ -2,3 +2,4 @@ aiohttp==3.8.1
 ariadne-django==0.3.0
 Django==4.0.7
 redis==4.3.4
+django-cors-headers==3.13.0
