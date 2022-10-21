@@ -9,7 +9,7 @@ import "./assets/main.css";
 const cache = new InMemoryCache();
 const apolloClient = new ApolloClient({
   cache,
-  uri: "http://127.0.0.1:8080/api/v1/country",
+  uri: "http://127.0.0.1:8000/api/v1/country",
 });
 
 const app = createApp(App);

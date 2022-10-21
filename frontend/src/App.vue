@@ -1,22 +1,7 @@
 <script setup>
-import { useQuery } from "@vue/apollo-composable";
-import gql from "graphql-tag";
+import GraphQLEnumDatalist from "./components/GraphQLEnumDatalist.vue";
 import HeaderLogo from "./components/HeaderLogo.vue";
-import ItensSelection from "./components/ItensSelection.vue";
 import SocialMediaLink from "./components/SocialMediaLink.vue";
-
-const CHARACTERS_QUERY = gql`
-  {
-    __type(name: "IndicatorId") {
-      enumValues {
-        name
-        description
-      }
-    }
-  }
-`;
-
-const { result, loading, error } = useQuery(CHARACTERS_QUERY);
 </script>
 
 <template>
@@ -26,12 +11,6 @@ const { result, loading, error } = useQuery(CHARACTERS_QUERY);
     <HeaderLogo />
   </header>
   <main>
-    <p v-if="error">Something went wrong...</p>
-    <p v-if="loading">Loading...</p>
-    <p v-else v-for="type in result.__type.enumValues" :key="type.name">
-      {{ type.description }}
-    </p>
-    <div></div>
     <div class="bg-section p-1 mb-4">
       <section
         class="container text-center text-lg-start pe-0"
@@ -51,8 +30,19 @@ const { result, loading, error } = useQuery(CHARACTERS_QUERY);
         </p>
       </section>
     </div>
-    <ItensSelection label="Country" placeholder="Choose a Country" />
-    <ItensSelection label="Indicator" placeholder="Choose an Indicator" />
+    <GraphQLEnumDatalist
+      label="Country"
+      placeholder="Choose a Country"
+      graphQLEnumName="Code"
+      :isDropDown="true"
+      :maxResult="6"
+    />
+    <GraphQLEnumDatalist
+      label="Indicator"
+      placeholder="Choose an Indicator"
+      graphQLEnumName="IndicatorId"
+      :alwaysShowOptions="true"
+    />
   </main>
 
   <footer
