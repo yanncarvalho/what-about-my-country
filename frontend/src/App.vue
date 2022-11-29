@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import CountryInformationSection from "./components/CountryInformationSection.vue";
 import GraphQLEnumDatalist from "./components/GraphQLEnumDatalist.vue";
 import HeaderLogo from "./components/HeaderLogo.vue";
 import SocialMediaLink from "./components/SocialMediaLink.vue";
@@ -8,6 +9,8 @@ const selectedTags = ref({
   country: [],
   indicator: [],
 });
+
+let buttonSelection = ref({});
 </script>
 
 <template>
@@ -51,7 +54,32 @@ const selectedTags = ref({
       graphQLEnumName="IndicatorId"
       :alwaysShowOptions="true"
     />
-    <p>Selected tags: {{ selectedTags }}</p>
+    <div class="d-flex container justify-content-center">
+      <a
+        role="button"
+        disabled
+        href="#countryinfo"
+        :class="{
+          disabled:
+            selectedTags.country.length === 0 ||
+            Object.entries(buttonSelection).toString() ===
+              Object.entries(selectedTags).toString(),
+        }"
+        value="Show me these countries"
+        class="btn btn-primary text-wrap px-sm-5 mb-2"
+        @click="buttonSelection = JSON.parse(JSON.stringify(selectedTags))"
+      >
+        Show me these countries
+      </a>
+    </div>
+
+    <div
+      id="countryinfo"
+      v-for="country in buttonSelection.country"
+      :key="country.key"
+    >
+      <CountryInformationSection :countryName="country.value" />
+    </div>
   </main>
 
   <footer

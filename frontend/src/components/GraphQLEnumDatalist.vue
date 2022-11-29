@@ -7,7 +7,7 @@ import { ref } from "vue";
 const selectedTags = ref([]);
 const emit = defineEmits(["selectedTags"]);
 
-emit("selectedTags", selectedTags.value);
+emit("selectedTags", selectedTags);
 const props = defineProps({
   label: String,
   placeholder: String,
@@ -64,7 +64,7 @@ const { result, loading, error } = useQuery(REQUEST);
         element-id="tags"
         @tag-added="(tag) => selectedTags.push(tag)"
         @tag-removed="
-          (tag) => (selectedTags = selectedTags.filter((v) => v.key != tag.key))
+          (tag) => (selectedTags = selectedTags.filter((v) => v.key !== tag.key))
         "
         :existing-tags="
           result.__type.enumValues.map((type) => {
@@ -79,7 +79,11 @@ const { result, loading, error } = useQuery(REQUEST);
         :only-existing-tags="true"
         :add-tags-on-space="true"
         :typeahead-always-show="alwaysShowOptions"
-        :placeholder="placeholder"
+        :placeholder="
+          result.__type.enumValues.length === selectedTags.length
+            ? ''
+            : placeholder
+        "
       >
       </TagsInput>
     </div>

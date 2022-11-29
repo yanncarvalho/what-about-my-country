@@ -23,6 +23,26 @@ body {
   font-family: var(--font-base);
 }
 
+.btn-primary{
+    background-color: var(--color-primary-100) !important;
+    color: var(--color-text) !important;
+    border-style: none;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    
+    border-radius: 12px;
+}
+
+btn-primary:focus{
+    border-style: solid !important;
+}
+
+.btn-primary:hover{
+    background-color: var(--color-primary-70) !important;
+
+}
+
 .bg-headfoot {
   background-color: var(--color-secondary-100);
 }
