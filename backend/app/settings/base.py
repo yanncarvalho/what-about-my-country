@@ -13,10 +13,7 @@ import os
 from pathlib import Path
 from typing import Dict, Union
 
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:4000',
-)
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
