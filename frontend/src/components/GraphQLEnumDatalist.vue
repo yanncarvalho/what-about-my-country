@@ -2,11 +2,16 @@
 import TagsInput from "@voerro/vue-tagsinput/src/VoerroTagsInput.vue";
 import { useQuery } from "@vue/apollo-composable";
 import gql from "graphql-tag";
+import { ref } from "vue";
+
+const selectedTags = ref([]);
+const emit = defineEmits(["selectedTags"]);
+
+emit("selectedTags", selectedTags.value);
 const props = defineProps({
   label: String,
   placeholder: String,
   graphQLEnumName: String,
-
   alwaysShowOptions: {
     type: Boolean,
     default: false,
@@ -16,7 +21,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-
   maxResult: {
     type: Number,
     default: 0,
@@ -36,7 +40,6 @@ const REQUEST = gql`
 
 const { result, loading, error } = useQuery(REQUEST);
 </script>
-//v-for="type in result" :key="type.name"> // {{ type.description }}
 <template>
   <div class="container mb-3" :aria-label="placeholder">
     <div
@@ -59,7 +62,10 @@ const { result, loading, error } = useQuery(REQUEST);
       <TagsInput
         id="tagsInput"
         element-id="tags"
-        v-model="selectedTags"
+        @tag-added="(tag) => selectedTags.push(tag)"
+        @tag-removed="
+          (tag) => (selectedTags = selectedTags.filter((v) => v.key != tag.key))
+        "
         :existing-tags="
           result.__type.enumValues.map((type) => {
             return { key: type.name, value: type.description };
@@ -97,7 +103,6 @@ const { result, loading, error } = useQuery(REQUEST);
   background-color: var(--color-grey-20);
 }
 
-/* Typeahead */
 .typeahead-hide-btn {
   color: var(--color-primary-70) !important;
 }

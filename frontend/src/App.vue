@@ -1,7 +1,13 @@
 <script setup>
+import { ref } from "vue";
 import GraphQLEnumDatalist from "./components/GraphQLEnumDatalist.vue";
 import HeaderLogo from "./components/HeaderLogo.vue";
 import SocialMediaLink from "./components/SocialMediaLink.vue";
+
+const selectedTags = ref({
+  country: [],
+  indicator: [],
+});
 </script>
 
 <template>
@@ -31,6 +37,7 @@ import SocialMediaLink from "./components/SocialMediaLink.vue";
       </section>
     </div>
     <GraphQLEnumDatalist
+      @selectedTags="(v) => (selectedTags.country = v)"
       label="Country"
       placeholder="Choose a Country"
       graphQLEnumName="Code"
@@ -38,11 +45,13 @@ import SocialMediaLink from "./components/SocialMediaLink.vue";
       :maxResult="6"
     />
     <GraphQLEnumDatalist
+      @selectedTags="(v) => (selectedTags.indicator = v)"
       label="Indicator"
       placeholder="Choose an Indicator"
       graphQLEnumName="IndicatorId"
       :alwaysShowOptions="true"
     />
+    <p>Selected tags: {{ selectedTags }}</p>
   </main>
 
   <footer
