@@ -47,8 +47,8 @@ const { result, loading, error } = useQuery(REQUEST);
       class="alert alert-danger text-center"
       role="alert"
     >
-      Something went wrong, it was not possible to loading
-      <strong>{{ label }}</strong> options
+      Something went wrong, it was not possible to load
+      <b>{{ label }}</b> options
     </div>
     <div
       v-else-if="loading || result.enumValues"
@@ -64,7 +64,8 @@ const { result, loading, error } = useQuery(REQUEST);
         element-id="tags"
         @tag-added="(tag) => selectedTags.push(tag)"
         @tag-removed="
-          (tag) => (selectedTags = selectedTags.filter((v) => v.key !== tag.key))
+          (tag) =>
+            (selectedTags = selectedTags.filter((v) => v.key !== tag.key))
         "
         :existing-tags="
           result.__type.enumValues.map((type) => {

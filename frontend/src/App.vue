@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import CountryInformationSection from "./components/CountryInformationSection.vue";
+import CountryInformationCards from "./components/CountryInformationCards.vue";
 import GraphQLEnumDatalist from "./components/GraphQLEnumDatalist.vue";
 import HeaderLogo from "./components/HeaderLogo.vue";
 import SocialMediaLink from "./components/SocialMediaLink.vue";
@@ -10,7 +10,19 @@ const selectedTags = ref({
   indicator: [],
 });
 
-let buttonSelection = ref({});
+let buttonSelection = ref({
+  country: [],
+  indicator: [],
+});
+
+const informationSource = {
+  link: "https://databank.worldbank.org/",
+  text: "World Bank",
+};
+
+function convertKeysToString(keys) {
+  return JSON.stringify(keys).replace(/"/g, "");
+}
 </script>
 
 <template>
@@ -33,7 +45,7 @@ let buttonSelection = ref({});
           We provide information from the World Bank database and create graphs
           with this information.
           <br />
-          <a href="https://databank.worldbank.org/" target="_blank">
+          <a :href="informationSource.link" target="_blank">
             Read more about World Bank database
           </a>
         </p>
@@ -65,21 +77,25 @@ let buttonSelection = ref({});
             Object.entries(buttonSelection).toString() ===
               Object.entries(selectedTags).toString(),
         }"
-        value="Show me these countries"
+        title="Show me these countries"
         class="btn btn-primary text-wrap px-sm-5 mb-2"
+        aria-label="Click to show information about selected countries"
         @click="buttonSelection = JSON.parse(JSON.stringify(selectedTags))"
       >
         Show me these countries
       </a>
     </div>
-
-    <div
+    <CountryInformationCards
       id="countryinfo"
-      v-for="country in buttonSelection.country"
-      :key="country.key"
-    >
-      <CountryInformationSection :countryName="country.value" />
-    </div>
+      v-if="
+        buttonSelection.country !== null && buttonSelection.country.length !== 0
+      "
+      :countryCodes="
+        convertKeysToString(buttonSelection.country.map((c) => c.key))
+      "
+      :source="informationSource.link"
+      :name="informationSource.text"
+    />
   </main>
 
   <footer

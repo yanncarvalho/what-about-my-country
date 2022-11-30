@@ -9,6 +9,7 @@ import IconLinkedin from "./icons/IconLinkedin.vue";
     class="m-2"
     aria-label="Link to access the app author's Github"
     target="_blank"
+    title="author's Github"
   >
     <IconGithub />
   </a>
@@ -17,6 +18,7 @@ import IconLinkedin from "./icons/IconLinkedin.vue";
     class="m-2"
     aria-label="Link to access the app author's LinkedIn account"
     target="_blank"
+    title="author's LinkedIn account"
     ><IconLinkedin />
   </a>
 </template>
