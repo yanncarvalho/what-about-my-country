@@ -59,7 +59,7 @@ onUpdated(() => {
     Loading <b> Countries </b> information...
   </div>
 
-  <article v-else class="container-fluid bg-section my-3 py-2" ref="articleId">
+  <article v-else class="container-fluid bg-primary my-3 py-2" ref="articleId">
     <div class="container">
       <div
         class="row justify-content-start row-cols-1 row-cols-md-2 row-cols-lg-3 g-2"
@@ -67,13 +67,16 @@ onUpdated(() => {
         <div class="col" v-for="country in result.country" :key="country.id">
           <div class="card h-100">
             <img
-              class="card-img-top img-card"
+              class="card-img-top card-img"
               :alt="`Flag of ${country.name}`"
               :src="getFlagUrl(country.id.toLowerCase())"
               @error="(event) => onErrorGetFlag(event)"
             />
-
-            <h5 class="card-header text-center fw-bold">{{ country.name }}</h5>
+            <h4
+              class="card-header card-header-large text-center d-flex justify-content-center align-items-center fw-bold"
+            >
+              {{ country.name }}
+            </h4>
             <ul class="list-group list-group-flush">
               <li class="list-group-item">
                 <b>Capital city</b>: {{ country.capitalCity }}

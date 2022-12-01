@@ -33,16 +33,15 @@ body {
     border-radius: 12px;
 }
 
-btn-primary:focus{
+.btn-primary:focus{
     border-style: solid !important;
 }
 
 .btn-primary:hover{
     background-color: var(--color-primary-70) !important;
-
 }
 
-.img-card {
+.card-img {
   height: 14em;
   background-color: var(--color-grey-20);
 }
@@ -51,8 +50,12 @@ btn-primary:focus{
   background-color: var(--color-secondary-100);
 }
 
-.bg-section {
-  background-color: var(--color-primary-40);
+.bg-primary {
+  background-color: var(--color-primary-40) !important;
+}
+
+.card-header-large{
+    height:80px;
 }
 
 :-webkit-input-placeholder {

@@ -2,9 +2,9 @@ name: backend
 
 on:
   push:
-    branches: [ "main", "feature/add-frontend" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main", "feature/add-frontend" ]
+    branches: [ "main", "develop" ]
 
 jobs:
   build:

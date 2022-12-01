@@ -40,7 +40,7 @@ function convertKeysToString(keys) {
     <HeaderLogo />
   </header>
   <main>
-    <div class="bg-section p-1 mb-4">
+    <div class="bg-primary p-1 mb-4">
       <section
         class="container text-center text-lg-start pe-0"
         aria-labelledby="section-text"
@@ -75,9 +75,8 @@ function convertKeysToString(keys) {
       :alwaysShowOptions="true"
     />
     <div class="d-flex container justify-content-center">
-      <a
-        role="button"
-        disabled
+      <button
+        type="button"
         :class="{
           disabled:
             selectedTags.country.length === 0 ||
@@ -90,7 +89,7 @@ function convertKeysToString(keys) {
         @click="onClickShowCountries"
       >
         Show me these countries
-      </a>
+      </button>
     </div>
     <CountryInformationCards
       id="countryCards"

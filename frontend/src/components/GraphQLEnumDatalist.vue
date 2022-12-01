@@ -55,7 +55,7 @@ const { result, loading, error } = useQuery(REQUEST);
       class="alert alert-dark text-center"
       role="alert"
     >
-      Loading <strong>{{ label }}</strong> options...
+      Loading <b>{{ label }}</b> options...
     </div>
     <div v-else>
       <label for="tagsInput" class="fw-bold">{{ label }}</label>
