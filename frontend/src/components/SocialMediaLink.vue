@@ -5,7 +5,7 @@ import IconLinkedin from "./icons/IconLinkedin.vue";
 
 <template>
   <a
-    href=" https://github.com/yanncarvalho"
+    href="https://github.com/yanncarvalho"
     class="m-2"
     aria-label="Link to access the app author's Github"
     target="_blank"

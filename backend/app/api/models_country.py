@@ -4,10 +4,10 @@ from app.api import helpers, models
 class Country:
   """Country class represeting database data and World Bank API."""
 
-  _REDIS_COUNTRIES_ID: str = 'api:country:iso3code'
+  _REDIS_COUNTRIES_ID: str = 'api:country:iso2Code'
 
   def __init__(self, country_code: str):
-    """Inits Country with country iso3code id."""
+    """Inits Country with country iso2Code id."""
     key: str = ':'.join((Country._REDIS_COUNTRIES_ID, country_code.upper()))
     Country._database = models.RedisModel(key=key)
 
@@ -21,7 +21,7 @@ class Country:
 
   @classmethod
   async def save_from_net(cls, country_code: str) -> None:
-    """save a country with its iso3code id from World Bank API in the database."""
+    """save a country with its iso2Code id from World Bank API in the database."""
     from_net: Optional[helpers.CountryAPIRequest] = await helpers.get_from_net(country_code)
     from_net_fields: List[models.Field] = \
       [models.Field(k, v) for k, v in from_net.items()]
@@ -29,7 +29,7 @@ class Country:
 
   @staticmethod
   def all_keys_n_name_from_net() -> Tuple[Dict[str,str]]:
-    """get a tuple of dictionaries with iso3code id (key = id) and country name (key = name) from World Bank API"""
+    """get a tuple of dictionaries with iso2Code id (key = id) and country name (key = name) from World Bank API"""
     return helpers.get_keys_n_name_from_net()
 
   @staticmethod

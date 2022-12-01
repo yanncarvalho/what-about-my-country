@@ -7,6 +7,12 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 ALLOWED_HOSTS = ['*']
 
+#=---------------- CORS -----------------=#
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = (
+    os.getenv('DJANGO_CORS_ORIGIN_URL')
+)
+
 #=---------------- LOGGING SETTINGS -----------------=#
 LOGGING = {
     'version': 1,

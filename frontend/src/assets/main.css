@@ -30,7 +30,6 @@ body {
     font-weight: bold;
     display: flex;
     justify-content: center;
-    
     border-radius: 12px;
 }
 
@@ -41,6 +40,11 @@ btn-primary:focus{
 .btn-primary:hover{
     background-color: var(--color-primary-70) !important;
 
+}
+
+.img-card {
+  height: 14em;
+  background-color: var(--color-grey-20);
 }
 
 .bg-headfoot {

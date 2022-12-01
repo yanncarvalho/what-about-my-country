@@ -8,7 +8,7 @@ from django.test import SimpleTestCase
 class CountryTest(SimpleTestCase):
 
   def setUp(self):
-    self.key = 'IND' #some country iso3code
+    self.key = 'IND' #some country iso2Code
     self.Country = models_country.Country
 
   @patch('app.api.models.RedisModel.save')

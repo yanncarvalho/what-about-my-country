@@ -32,7 +32,7 @@ schema_graphql = '''
     directive @zeroOrPositive on ARGUMENT_DEFINITION
 
     type Query {
-        "country request - code in iso3code"
+        "country request - code in iso2Code"
         country(codes: [Code!]!): [Country!]
     }
 
@@ -40,7 +40,7 @@ schema_graphql = '''
     Get some information about a particular country from [World Bank API] (https://data.worldbank.org/)
     """
     type Country {
-        "id in iso3code"
+        "id in iso2Code"
         id: String!
 
         "country name"
@@ -97,7 +97,7 @@ schema_graphql = '''
     enum IndicatorId {fields}
 
     """
-    Country [iso3Code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)
+    Country [iso2Code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
     """
     enum Code {codes_enum}
 '''.format(
@@ -112,7 +112,7 @@ query = ObjectType('Query')
 def _resolve_country(*_, codes):
     """ GraphQL Query country resolve
       Args:
-      - code: country iso3code id
+      - code: country iso2Code id
 
       Returns:
           List of country fields

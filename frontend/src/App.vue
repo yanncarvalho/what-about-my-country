@@ -20,6 +20,14 @@ const informationSource = {
   text: "World Bank",
 };
 
+function onClickShowCountries() {
+  buttonSelection.value = JSON.parse(JSON.stringify(selectedTags.value));
+  let countryCards = document.getElementById("countryCards");
+  if (countryCards) {
+    countryCards.scrollIntoView({ behavior: "smooth" });
+  }
+}
+
 function convertKeysToString(keys) {
   return JSON.stringify(keys).replace(/"/g, "");
 }
@@ -70,7 +78,6 @@ function convertKeysToString(keys) {
       <a
         role="button"
         disabled
-        href="#countryinfo"
         :class="{
           disabled:
             selectedTags.country.length === 0 ||
@@ -80,13 +87,13 @@ function convertKeysToString(keys) {
         title="Show me these countries"
         class="btn btn-primary text-wrap px-sm-5 mb-2"
         aria-label="Click to show information about selected countries"
-        @click="buttonSelection = JSON.parse(JSON.stringify(selectedTags))"
+        @click="onClickShowCountries"
       >
         Show me these countries
       </a>
     </div>
     <CountryInformationCards
-      id="countryinfo"
+      id="countryCards"
       v-if="
         buttonSelection.country !== null && buttonSelection.country.length !== 0
       "

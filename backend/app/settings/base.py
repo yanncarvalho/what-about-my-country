@@ -13,8 +13,6 @@ import os
 from pathlib import Path
 from typing import Dict, Union
 
-CORS_ORIGIN_ALLOW_ALL = True
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -85,9 +83,9 @@ FROM_NET_KEY_TO_DICT_VALUE: Dict[str, Dict[str, str]] = {
     # world_api_url : dict{ id: "applicationId"; name: "description of the id" }
     API_BASIC_INFO_URL                    : {'id' :  'basicInfo', 'name' : 'Basic country info'},
     API_INDICATOR_URL+'/NY.GDP.MKTP.CD'   : {'id' :  'GDP', 'name' : 'GDP (current US$)'},
-    API_INDICATOR_URL+'/SP.POP.TOTL'      : {'id':  'totalPopulation', 'name': 'Total Population)'},
+    API_INDICATOR_URL+'/SP.POP.TOTL'      : {'id':  'totalPopulation', 'name': 'Total population'},
     API_INDICATOR_URL+'/SE.ADT.1524.LT.ZS': {'id' : 'literacyRate', 'name' : 'Literacy rate, youth population'},
-    API_INDICATOR_URL+'/SI.POV.GINI': {'id': 'giniIndex', 'name': 'Gini Index'},
+    API_INDICATOR_URL+'/SI.POV.GINI': {'id': 'giniIndex', 'name': 'Gini index'},
     API_INDICATOR_URL+'/EG.ELC.ACCS.ZS': {'id': 'eletricityAccess', 'name': 'Access to electricity'},
 }
 

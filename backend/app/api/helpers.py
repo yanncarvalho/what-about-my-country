@@ -89,7 +89,7 @@ def _is_valid_country(country: CountryAPIRequest) -> bool:
   Returns:
     True if the country is valid, False if not
   """
-  basic_data: Set[str] = {'id',
+  basic_data: Set[str] = {'iso2Code',
                           'name',
                           'region',
                           'capitalCity',
@@ -101,7 +101,6 @@ def _is_valid_country(country: CountryAPIRequest) -> bool:
     has_value_in_keys = 'value' in set(country['region'].keys()).intersection(
                                    set(country['incomeLevel'].keys()))
     is_country = country['incomeLevel']['value'] != 'Aggregates' and country['longitude'] != ''
-
   return has_basic_data and has_value_in_keys and is_country
 
 
@@ -112,7 +111,7 @@ def _country_basic_info_normalize(country: CountryAPIRequest, field_name: str) -
   - Countries: list of dictionary with countries with all information from World Bank API
       Basic structure of the country dictionary:\n
       [{
-          'id',\n
+          'iso2Code',\n
           'name',\n
           'region':{'value'},\n
           'capitalCity',\n
@@ -128,7 +127,7 @@ def _country_basic_info_normalize(country: CountryAPIRequest, field_name: str) -
   try:
    result: Dict[str, CountryAPIRequest] = \
            {field_name: {
-                 'id': _sanitize_string(country['id']),
+               'id': _sanitize_string(country['iso2Code']),
                  'name': _sanitize_string(country['name']),
                  'region': _sanitize_string(country['region']['value']),
                  'capitalCity': _sanitize_string(country['capitalCity']),
@@ -190,12 +189,12 @@ async def _get_items_wbank_api(urlBaseApiHttps: str, requests: Sequence[str]) ->
 
 
 def get_keys_n_name_from_net() -> Tuple[Dict[str,str]]:
-  """ Request to World Bank API basic countries information and return them iso3code IDs and country names
+  """ Request to World Bank API basic countries information and return them iso2Code IDs and country names
 
   Returns:
    A tuple of dictionaries with:\n
    {
-    \tid: country iso3code ID
+    \tid: country iso2Code ID
     \tname: country name\n
    }
   """
@@ -205,18 +204,17 @@ def get_keys_n_name_from_net() -> Tuple[Dict[str,str]]:
       _get_items_wbank_api(api_url_root, {country_url}))
 
   countries_keys_n_name: Tuple[str, Dict[str,str]] = \
-      tuple({'id': val['id'], 'name': _sanitize_string(val['name'])}
+      tuple({'id': val['iso2Code'], 'name': _sanitize_string(val['name'])}
                 for val in countries_n_regions
                 if _is_valid_country(val))
-
   return countries_keys_n_name
 
 
 async def get_from_net(key: str) -> Optional[CountryAPIRequest]:
-  """ request basic country information from the World Bank API and returns iso3code IDs
+  """ request basic country information from the World Bank API and returns iso2Code IDs
 
   Args:
-  - key: country iso3code ID
+  - key: country iso2Code ID
 
   Returns:
     A dictionary with information for a specific country,
