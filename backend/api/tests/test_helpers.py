@@ -8,7 +8,7 @@ class HelpersTest(SimpleTestCase):
   def setUp(self):
    async def override_get_items_wbank_api(*_):
         return [{
-            'id': 'Test',
+            'iso2Code': 'Test',
             'name': 'Test',
             'region': {'value': 'test'},
             'capitalCity': 'Test',
@@ -21,7 +21,6 @@ class HelpersTest(SimpleTestCase):
        return None
    self.override_get_items_wbank_api = override_get_items_wbank_api
    self.override_get_items_wbank_api_return_None = override_get_items_wbank_api_return_None
-
 
   def test_if_get_keys_n_name_from_net_then_success(self):
    helpers._get_items_wbank_api = self.override_get_items_wbank_api

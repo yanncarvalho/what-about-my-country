@@ -6,7 +6,7 @@ from backend.api import helpers, models_country
 class CountryTest(SimpleTestCase):
 
   def setUp(self):
-    self.key = 'IND' #some country iso3code
+    self.key = 'IND' #some country iso2Code
     self.Country = models_country.Country
 
   @patch('backend.api.models.RedisModel.save')
