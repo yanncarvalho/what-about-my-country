@@ -13,7 +13,6 @@ const apolloClient = new ApolloClient({
 });
 
 const app = createApp(App);
-let headers = new Headers({ "Access-Control-Allow-Origin": "*" });
-app.provide(DefaultApolloClient, apolloClient, headers);
+app.provide(DefaultApolloClient, apolloClient);
 
 app.mount("#app");

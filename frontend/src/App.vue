@@ -1,35 +1,27 @@
 <script setup>
 import { ref } from "vue";
-import CountryInformationCards from "./components/CountryInformationCards.vue";
-import GraphQLEnumDatalist from "./components/GraphQLEnumDatalist.vue";
-import HeaderLogo from "./components/HeaderLogo.vue";
+import LogoHeader from "./components/icons/LogoHeader.vue";
+import RequestInformation from "./components/RequestInformation.vue";
 import SocialMediaLink from "./components/SocialMediaLink.vue";
+import ViewInformation from "./components/ViewInformation.vue";
 
-const selectedTags = ref({
-  country: [],
-  indicator: [],
+const formResult = ref({
+  country: Map,
+  indicator: Map,
 });
-
-let buttonSelection = ref({
-  country: [],
-  indicator: [],
-});
-
-const informationSource = {
-  link: "https://databank.worldbank.org/",
-  text: "World Bank",
+const sourceLink = {
+  url: "https://databank.worldbank.org/",
+  name: "World Bank",
 };
 
-function onClickShowCountries() {
-  buttonSelection.value = JSON.parse(JSON.stringify(selectedTags.value));
-  let countryCards = document.getElementById("countryCards");
-  if (countryCards) {
-    countryCards.scrollIntoView({ behavior: "smooth" });
+function stringifyKeysObj(obj) {
+  const regex = /"/g;
+  for (const key of Object.keys(obj)) {
+    let arr = obj[key];
+    let keys = Array.isArray(arr) ? arr.map((o) => o.key) : arr;
+    obj[key] = JSON.stringify(keys).replace(regex, "");
   }
-}
-
-function convertKeysToString(keys) {
-  return JSON.stringify(keys).replace(/"/g, "");
+  return obj;
 }
 </script>
 
@@ -37,7 +29,7 @@ function convertKeysToString(keys) {
   <header
     class="bg-headfoot container-fluid d-inline-flex justify-content-center shadow p-2 mb-4"
   >
-    <HeaderLogo />
+    <LogoHeader />
   </header>
   <main>
     <div class="bg-primary p-1 mb-4">
@@ -53,54 +45,18 @@ function convertKeysToString(keys) {
           We provide information from the World Bank database and create graphs
           with this information.
           <br />
-          <a :href="informationSource.link" target="_blank">
+          <a :href="sourceLink.url" target="_blank">
             Read more about World Bank database
           </a>
         </p>
       </section>
     </div>
-    <GraphQLEnumDatalist
-      @selectedTags="(v) => (selectedTags.country = v)"
-      label="Country"
-      placeholder="Choose a Country"
-      graphQLEnumName="Code"
-      :isDropDown="true"
-      :maxResult="6"
-    />
-    <GraphQLEnumDatalist
-      @selectedTags="(v) => (selectedTags.indicator = v)"
-      label="Indicator"
-      placeholder="Choose an Indicator"
-      graphQLEnumName="IndicatorId"
-      :alwaysShowOptions="true"
-    />
-    <div class="d-flex container justify-content-center">
-      <button
-        type="button"
-        :class="{
-          disabled:
-            selectedTags.country.length === 0 ||
-            Object.entries(buttonSelection).toString() ===
-              Object.entries(selectedTags).toString(),
-        }"
-        title="Show me these countries"
-        class="btn btn-primary text-wrap px-sm-5 mb-2"
-        aria-label="Click to show information about selected countries"
-        @click="onClickShowCountries"
-      >
-        Show me these countries
-      </button>
-    </div>
-    <CountryInformationCards
-      id="countryCards"
-      v-if="
-        buttonSelection.country !== null && buttonSelection.country.length !== 0
-      "
-      :countryCodes="
-        convertKeysToString(buttonSelection.country.map((c) => c.key))
-      "
-      :source="informationSource.link"
-      :name="informationSource.text"
+
+    <RequestInformation @onResult="(r) => (formResult = r)" />
+    <ViewInformation
+      v-if="formResult.country !== null && formResult.country.length !== 0"
+      :keys="stringifyKeysObj(formResult)"
+      :sourceLink="sourceLink"
     />
   </main>
 
