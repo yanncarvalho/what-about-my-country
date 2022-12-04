@@ -1,10 +1,36 @@
 <script setup>
-import { computed, onUpdated, ref } from "vue";
+import { computed, onUpdated, ref, watch } from "vue";
 import GraphQLComponent from "./GraphQLComponent.vue";
 import ViewInformationCard from "./ViewInformationCard.vue";
+import ViewInformationGraph from "./ViewInformationGraph.vue";
 
 const cardsRef = ref(null);
-const result = ref([]);
+const result = ref();
+const indicators = ref();
+
+function createIndicatorObj(indicator, country) {
+  return {
+    description: indicator.description,
+    [country.id]: {
+      country: {
+        name: country.name,
+        data: indicator.data.reduce(
+          (a, v) => ({ ...a, [v.year]: v.value }),
+          {}
+        ),
+      },
+    },
+  };
+}
+
+watch(result, (res) => {
+  indicators.value = {};
+  for (let country of res.country) {
+    for (let indicator of country.indicators) {
+      indicators.value[indicator.id] = createIndicatorObj(indicator, country);
+    }
+  }
+});
 
 const sourceLink = {
   url: "https://databank.worldbank.org/",
@@ -67,14 +93,18 @@ onUpdated(() => {
         <div
           class="row justify-content-start row-cols-1 row-cols-md-2 row-cols-lg-3 g-2"
         >
-          <div class="col" v-for="country in result.country" :key="country.id">
-            <ViewInformationCard
-              :countryInfo="country"
-              :sourceLink="sourceLink"
-            />
+          <div v-for="country in result.country" :key="country.id">
+            <div class="col">
+              <ViewInformationCard
+                :countryInfo="country"
+                :sourceLink="sourceLink"
+              />
+            </div>
           </div>
         </div>
       </div>
     </article>
+
+    <ViewInformationGraph />
   </span>
 </template>
