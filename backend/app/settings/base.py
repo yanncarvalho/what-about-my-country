@@ -100,7 +100,7 @@ API_COUNTRY_URL: str = '/'.join((API_VERSION, 'country'))
 #=---------------- REDIS SETTINGS -----------------=#
 RedisVal = Union[str, bool, int]
 REDIS: Dict[str, RedisVal] = {
-    'host': os.getenv('REDIS_HOST'),
+    'host': os.getenv('REDIS_HOST', '127.0.0.1'),
     'port': int(os.getenv('REDIS_PORT', '6379')),
     'charset': os.getenv('REDIS_CHARSET','utf-8'),
     'decode_responses': os.getenv('REDIS_DECODE_RESPONSES', 'True').lower() == 'true',
