@@ -10,26 +10,35 @@ import {
 import "chart.js/auto";
 import { computed } from "vue";
 import { Line } from "vue-chartjs";
+import ViewInformationSource from "./ViewInformationSource.vue";
 
 ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale);
 
 const props = defineProps({
-  labels: Set,
-  datasets: Array,
-  description: String,
-  sourceLink: {
-    type: Object,
+  labels: {
     required: true,
+    type: Array,
+  },
+  datasets: {
+    required: true,
+    type: Array,
+  },
+  description: {
+    required: true,
+    type: String,
+  },
+  countriesNoData: {
+    required: true,
+    type: Array,
   },
 });
 
-const datacollection = computed(() => {
+const dataCollection = computed(() => {
   return {
     labels: props.labels,
     datasets: props.datasets,
   };
 });
-
 const chartHeight = 250;
 </script>
 <template>
@@ -39,9 +48,21 @@ const chartHeight = 250;
     >
       {{ description }}
     </h4>
+
     <div class="bg-white m-0 border border-top-0">
+      <div
+        v-if="dataCollection.datasets.length === 0"
+        class="d-flex justify-content-center"
+      >
+        <img
+          class="img-fluid p-2"
+          src="@/assets/chart-not-found-data.png"
+          alt="No data found from these countries"
+        />
+      </div>
       <Line
-        :chartData="datacollection"
+        v-else
+        :chartData="dataCollection"
         :height="chartHeight"
         class="pb-2 pt-0 px-2"
       />
@@ -49,17 +70,16 @@ const chartHeight = 250;
     <div
       class="bg-secondary h-100 m-0 p-2 rounded-bottom w-100 border border-top-0"
     >
-      <small class="text-muted">
-        Source:&nbsp;
-        <a
-          :href="sourceLink.url"
-          target="_blank"
-          :title="sourceLink.name"
-          aria-label="Link to see data source information"
+      <div v-if="dataCollection.datasets.length !== 0">
+        <span
+          v-if="countriesNoData.length !== 0"
+          class="fw-bold small text-danger"
         >
-          {{ sourceLink.name }}
-        </a>
-      </small>
+          No data from {{ countriesNoData.toString().replace(/,/g, ", ") }}.
+          <br />
+        </span>
+        <ViewInformationSource />
+      </div>
     </div>
   </div>
 </template>

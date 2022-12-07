@@ -8,61 +8,70 @@ const result = ref();
 const indicators = ref();
 
 watch(result, (res) => {
-  indicators.value = {};
+  indicators.value = props.countries.indicator.reduce(
+    (o, item) => ({
+      ...o,
+      [item.key]: new Object({
+        id: item.key,
+        description: item.value,
+        labels: new Array(),
+        datasets: new Array(),
+        countryIds: new Set(),
+      }),
+    }),
+    {}
+  );
+
   res.country.forEach((country) => {
     country.indicators.forEach((indicator) => {
-      if (!indicators.value[indicator.id]) {
-        indicators.value[indicator.id] = {
-          id: indicator["id"],
-          description: indicator["description"],
-          labels: new Set(),
-          datasets: new Array(),
-        };
-      }
-
-      let indiData = indicator.data.reduce(
-        (a, v) => ({ ...a, [v.year]: v.value }),
-        {}
-      );
+      indicators.value[indicator.id].countryIds.add(country.id);
+      let indiData = indicator.data
+        .slice()
+        .reduce((a, v) => ({ ...a, [v.year]: v.value }), {});
+      let countryIndi = indicators.value[indicator.id];
       Object.keys(indiData).forEach((key) => {
-        indicators.value[indicator.id]["labels"].add(key);
+        if (!countryIndi.labels.includes(key)) {
+          countryIndi.labels.push(key);
+        }
       });
+      indicators.value[indicator.id].labels = countryIndi.labels.sort(
+        (a, b) => a - b
+      );
 
-      indiData = [...indicators.value[indicator.id]["labels"]].map((v) => {
+      indiData = indicators.value[indicator.id].labels.map((v) => {
         return indiData[v] ?? NaN;
       });
-      hasChart.value = indiData.length !== 0;
       indicators.value[indicator.id].datasets.push({
         data: indiData,
         label: country.name,
-        borderColor: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        borderColor: generateRandomColor(),
         fill: false,
       });
     });
   });
 });
 
-const sourceLink = {
-  url: "https://databank.worldbank.org/",
-  name: "World Bank",
-};
+function generateRandomColor() {
+  return "#" + Math.floor(Math.random() * 16777215).toString(16);
+}
 
-const hasChart = ref(false);
+function stringifyKeyObj(obj) {
+  const regex = /"/g;
+  let keys = Object.values(obj).map((o) => o.key) ?? [];
+  return JSON.stringify(keys).replace(regex, "");
+}
 
 const props = defineProps({
-  sourceLink: {
-    type: Object,
-    required: true,
-  },
-  keys: {
+  countries: {
     type: Object,
     required: true,
   },
 });
+
 const query = computed(() => {
   return `
    {
-    country(codes: ${props.keys.country}) {
+    country(codes:  ${stringifyKeyObj(props.countries.country)} ) {
       id,
       name,
       capitalCity,
@@ -70,7 +79,7 @@ const query = computed(() => {
       longitude,
       region,
       incomeLevel,
-      indicators(ids:${props.keys.indicator}){
+      indicators(ids: ${stringifyKeyObj(props.countries.indicator)}) {
         id
         description,
         data{
@@ -81,6 +90,7 @@ const query = computed(() => {
     }
    }`;
 });
+
 onUpdated(() => {
   if (cardsRef.value) {
     cardsRef.value.scrollIntoView({ behavior: "smooth" });
@@ -108,25 +118,28 @@ onUpdated(() => {
         >
           <div v-for="country in result.country" :key="country.id">
             <div class="col">
-              <ViewInformationCard
-                :countryInfo="country"
-                :sourceLink="sourceLink"
-              />
+              <ViewInformationCard :countryInfo="country" />
             </div>
           </div>
         </div>
       </div>
     </section>
-    <section class="my-4 bg-primary container-fluid" v-if="hasChart">
+    <section
+      class="my-4 bg-primary container-fluid"
+      v-show="!indicators || Object.keys(indicators).length !== 0"
+    >
       <div class="container-lg pt-2">
         <h3 class="fw-bold">Charts</h3>
         <div v-for="indicator in indicators" :key="indicator.id">
           <ViewInformationChart
-            v-if="indicator.datasets"
             :datasets="indicator.datasets"
             :labels="indicator.labels"
             :description="indicator.description"
-            :sourceLink="sourceLink"
+            :countriesNoData="
+              result.country
+                .filter((c) => !indicator.countryIds.has(c.id))
+                .map((c) => c.name)
+            "
           />
         </div>
       </div>

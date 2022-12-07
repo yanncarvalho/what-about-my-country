@@ -1,10 +1,7 @@
 <!-- eslint-disable no-unused-vars -->
 <script setup>
+import ViewInformationSource from "./ViewInformationSource.vue";
 const props = defineProps({
-  sourceLink: {
-    type: Object,
-    required: true,
-  },
   countryInfo: {
     type: Object,
     required: true,
@@ -53,17 +50,7 @@ function onErrorGetFlag(event) {
       </li>
     </ul>
     <div class="card-footer text-muted bg-secondary">
-      <small>
-        Source:&nbsp;
-        <a
-          :href="sourceLink.url"
-          target="_blank"
-          :title="sourceLink.name"
-          aria-label="Link to see data source information"
-        >
-          {{ sourceLink.name }}
-        </a>
-      </small>
+      <ViewInformationSource />
     </div>
   </div>
 </template>

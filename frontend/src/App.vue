@@ -4,25 +4,12 @@ import LogoHeader from "./components/icons/LogoHeader.vue";
 import RequestInformation from "./components/RequestInformation.vue";
 import SocialMediaLink from "./components/SocialMediaLink.vue";
 import ViewInformation from "./components/ViewInformation.vue";
+import { referenceSource } from "./common/helpers.js";
 
 const formResult = ref({
   country: Map,
   indicator: Map,
 });
-const sourceLink = {
-  url: "https://databank.worldbank.org/",
-  name: "World Bank",
-};
-
-function stringifyKeysObj(obj) {
-  const regex = /"/g;
-  for (const key of Object.keys(obj)) {
-    let arr = obj[key];
-    let keys = Array.isArray(arr) ? arr.map((o) => o.key) : arr;
-    obj[key] = JSON.stringify(keys).replace(regex, "");
-  }
-  return obj;
-}
 </script>
 
 <template>
@@ -45,7 +32,7 @@ function stringifyKeysObj(obj) {
           We provide information from the World Bank database and create graphs
           with this information.
           <br />
-          <a :href="sourceLink.url" target="_blank">
+          <a :href="referenceSource.url" target="_blank">
             Read more about World Bank database
           </a>
         </p>
@@ -55,8 +42,7 @@ function stringifyKeysObj(obj) {
     <RequestInformation @onResult="(r) => (formResult = r)" />
     <ViewInformation
       v-if="formResult.country !== null && formResult.country.length !== 0"
-      :keys="stringifyKeysObj(formResult)"
-      :sourceLink="sourceLink"
+      :countries="formResult"
     />
   </main>
 

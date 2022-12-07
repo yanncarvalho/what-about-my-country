@@ -6,10 +6,13 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import "./assets/main.css";
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  addTypename: false,
+});
+
 const apolloClient = new ApolloClient({
   cache,
-  uri: "http://127.0.0.1:8000/api/v1/country",
+  uri: "http://192.168.0.4:8080/api/v1/country",
 });
 
 const app = createApp(App);
