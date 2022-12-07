@@ -33,7 +33,7 @@ function onErrorGetFlag(event) {
       @error="(event) => onErrorGetFlag(event)"
     />
     <h4
-      class="card-header card-header-large text-center d-flex justify-content-center align-items-center fw-bold"
+      class="card-header card-header-large text-center d-flex justify-content-center align-items-center fw-bold bg-secondary"
     >
       {{ countryInfo.name }}
     </h4>
@@ -52,7 +52,7 @@ function onErrorGetFlag(event) {
         <b>Longitude</b>: {{ countryInfo.longitude }}
       </li>
     </ul>
-    <div class="card-footer text-muted">
+    <div class="card-footer text-muted bg-secondary">
       <small>
         Source:&nbsp;
         <a

@@ -47,6 +47,10 @@ body {
   background-color: var(--color-secondary-100);
 }
 
+.bg-secondary{
+    background-color: var(--color-secondary-40) !important;
+}
+
 .bg-primary {
   background-color: var(--color-primary-40) !important;
 }
