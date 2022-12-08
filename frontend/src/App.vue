@@ -1,23 +1,20 @@
 <script setup>
 import { ref } from "vue";
-import LogoHeader from "./components/icons/LogoHeader.vue";
 import RequestInformation from "./components/RequestInformation.vue";
-import SocialMediaLink from "./components/SocialMediaLink.vue";
+import Footer from "./components/TheFooter.vue";
+import Header from "./components/TheHeader.vue";
 import ViewInformation from "./components/ViewInformation.vue";
-import { referenceSource } from "./common/helpers.js";
+import { referenceSource, scrollToId } from "./common/helpers.js";
 
 const formResult = ref({
   country: Map,
   indicator: Map,
 });
+const reqInfoId = "requestInfo";
 </script>
 
 <template>
-  <header
-    class="bg-headfoot container-fluid d-inline-flex justify-content-center shadow p-2 mb-4"
-  >
-    <LogoHeader />
-  </header>
+  <Header />
   <main>
     <div class="bg-primary p-1 mb-4">
       <section
@@ -38,32 +35,12 @@ const formResult = ref({
         </p>
       </section>
     </div>
-
-    <RequestInformation @onResult="(r) => (formResult = r)" />
+    <RequestInformation @onResult="(r) => (formResult = r)" :id="reqInfoId" />
     <ViewInformation
       v-if="formResult.country !== null && formResult.country.length !== 0"
       :countries="formResult"
+      @clickBtn="scrollToId(reqInfoId)"
     />
   </main>
-
-  <footer
-    class="bg-headfoot p-3 text-center container-fluid d-sm-inline-flex justify-content-center align-items-center"
-  >
-    <img
-      src="./assets/logo.svg"
-      alt="App logo"
-      class="me-sm-5 img-sm-resize"
-      width="110"
-      height="110"
-    />
-
-    <span>
-      <p class="text-sm-center fs-6">
-        ©2022 by Yann Carvalho.
-        <br />
-        All Rights Reserved.
-      </p>
-      <SocialMediaLink />
-    </span>
-  </footer>
+  <Footer />
 </template>

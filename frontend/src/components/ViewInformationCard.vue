@@ -1,6 +1,8 @@
 <!-- eslint-disable no-unused-vars -->
 <script setup>
 import ViewInformationSource from "./ViewInformationSource.vue";
+import { getFlagUrl, getFlagNotFound } from "../common/helpers";
+
 const props = defineProps({
   countryInfo: {
     type: Object,
@@ -8,16 +10,8 @@ const props = defineProps({
   },
 });
 
-function getFlagUrl(name) {
-  let baseUrl = "../assets/flags/";
-  let imageFormat = "png";
-  let fullUrl = baseUrl + name + "." + imageFormat;
-  return new URL(fullUrl, import.meta.url).href;
-}
-
-function onErrorGetFlag(event) {
-  let notFoundFlagUrl = "../assets/flag-not-found.png";
-  event.target.src = new URL(notFoundFlagUrl, import.meta.url).href;
+function onErrorGetFlagNotFound(event) {
+  event.target.src = getFlagNotFound().href;
 }
 </script>
 
@@ -26,8 +20,8 @@ function onErrorGetFlag(event) {
     <img
       class="card-img-top card-img"
       :alt="`Flag of ${countryInfo.name}`"
-      :src="getFlagUrl(countryInfo.id.toLowerCase())"
-      @error="(event) => onErrorGetFlag(event)"
+      :src="getFlagUrl(countryInfo.id.toLowerCase()).href"
+      @error="onErrorGetFlagNotFound($event)"
     />
     <h4
       class="card-header card-header-large text-center d-flex justify-content-center align-items-center fw-bold bg-secondary"

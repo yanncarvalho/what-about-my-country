@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'Fredoka One';
+  src: url('./fonts/ttf/FredokaOne/FredokaOne-Regular.ttf') format('truetype');
+}
+
 :root {
   --color-grey-20: #E6E6E6;
   --color-grey-40: #B5BDBF;
@@ -10,14 +15,15 @@
   --color-secondary-40: #E4F5ED;
   --color-secondary-70: #C9EBDB;
   --color-secondary-100: #79CDA4;
-  --font-base: 'Quicksand';
+  --font-base: 'Quicksand', 'arial';
   --font-title: 'Fredoka One';
 }
 
 body {
-  color: var(--color-text);
-  background: var(--color-grey-20);
-  font-family: var(--font-base);
+    color: var(--color-text);
+    background: var(--color-grey-20);
+    font-family: var(--font-base);
+
 }
 
 .btn-primary{
@@ -39,12 +45,14 @@ body {
 }
 
 .card-img {
-  height: 14em;
-  background-color: var(--color-grey-20);
+
+    height:16em;
+    background-color: var(--color-grey-20);
 }
 
+
 .bg-headfoot {
-  background-color: var(--color-secondary-100);
+    background-color: var(--color-secondary-100);
 }
 
 .bg-secondary{
@@ -52,7 +60,7 @@ body {
 }
 
 .bg-primary {
-  background-color: var(--color-primary-40) !important;
+    background-color: var(--color-primary-40) !important;
 }
 
 .card-header-large{
@@ -82,15 +90,23 @@ body {
 }
 
 @media screen and (max-width: 880px) {
-  .img-880-resize {
-    width: 65px;
-    height: 65px;
+  .logo-img-880-resize {
+    width: 150px;
+    height: 150px;
+
   }
 }
 
 @media screen and (max-width: 576px) {
-  .img-sm-resize {
-    width: 50px;
-    height: 50px;
+  .logo-img-sm-resize {
+    width: 150px;
+    height: 150px;
+  }
+
+}
+
+@media screen and (max-width: 767px) {
+  .card-img {
+    height:100%;
   }
 }

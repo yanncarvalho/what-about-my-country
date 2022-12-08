@@ -1,0 +1,35 @@
+<script setup>
+// eslint-disable-next-line no-unused-vars
+const props = defineProps({
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  value: {
+    type: String,
+    required: true,
+  },
+  ariaLabel: {
+    type: String,
+    required: true,
+  },
+  typeBtn: {
+    type: String,
+    default: "button",
+  },
+});
+</script>
+
+<template>
+  <div class="d-flex container justify-content-center">
+    <input
+      :type="typeBtn === 'submit' ? 'submit' : 'button'"
+      :value="value"
+      :disabled="disabled"
+      :title="value"
+      :aria-label="ariaLabel"
+      @click="$emit('click', $event)"
+      class="btn btn-primary text-wrap px-sm-5 mb-2"
+    />
+  </div>
+</template>

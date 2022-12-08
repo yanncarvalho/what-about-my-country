@@ -1,7 +1,7 @@
 <script setup>
 import {
   CategoryScale,
-  Chart as ChartJS,
+  Chart,
   Legend,
   LinearScale,
   Title,
@@ -10,36 +10,41 @@ import {
 import "chart.js/auto";
 import { computed } from "vue";
 import { Line } from "vue-chartjs";
+import { getChartDataNotFoundUrl } from "../common/helpers";
 import ViewInformationSource from "./ViewInformationSource.vue";
 
-ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale);
+Chart.register(Title, Tooltip, Legend, CategoryScale, LinearScale);
 
 const props = defineProps({
   labels: {
-    required: true,
     type: Array,
+    required: true,
   },
   datasets: {
-    required: true,
     type: Array,
+    required: true,
   },
   description: {
-    required: true,
     type: String,
-  },
-  countriesNoData: {
     required: true,
+  },
+  countriesWithoutData: {
     type: Array,
+    required: true,
+  },
+  chartHeight: {
+    type: Number,
+    default: 250,
   },
 });
 
-const dataCollection = computed(() => {
-  return {
-    labels: props.labels,
-    datasets: props.datasets,
-  };
-});
-const chartHeight = 250;
+const dataCollection = computed(
+  () =>
+    new Object({
+      labels: props.labels,
+      datasets: props.datasets,
+    })
+);
 </script>
 <template>
   <div class="pb-4">
@@ -56,7 +61,7 @@ const chartHeight = 250;
       >
         <img
           class="img-fluid p-2"
-          src="@/assets/chart-not-found-data.png"
+          :src="getChartDataNotFoundUrl()"
           alt="No data found from these countries"
         />
       </div>
@@ -72,10 +77,11 @@ const chartHeight = 250;
     >
       <div v-if="dataCollection.datasets.length !== 0">
         <span
-          v-if="countriesNoData.length !== 0"
+          v-if="countriesWithoutData.length !== 0"
           class="fw-bold small text-danger"
         >
-          No data from {{ countriesNoData.toString().replace(/,/g, ", ") }}.
+          No data from
+          {{ countriesWithoutData.toString().replace(/,/g, ", ") }}.
           <br />
         </span>
         <ViewInformationSource />

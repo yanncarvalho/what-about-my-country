@@ -1,16 +1,27 @@
 <script setup>
 import TagsInput from "@voerro/vue-tagsinput";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import GraphQLComponent from "./GraphQLComponent.vue";
-const selectedTags = ref([]);
-const result = ref([]);
+import { instropectEnumValue } from "../common/schemas.js";
+
+const selectedTags = ref(new Array());
+const result = ref(new Array());
 const emit = defineEmits(["selectedElements"]);
 
 emit("selectedElements", selectedTags);
 const props = defineProps({
-  label: String,
-  placeholder: String,
-  graphQLEnumName: String,
+  label: {
+    type: String,
+    default: "Elements",
+  },
+  placeholder: {
+    type: String,
+    default: "Choose an element",
+  },
+  graphQLEnumName: {
+    type: String,
+    required: true,
+  },
   alwaysShowOptions: {
     type: Boolean,
     default: false,
@@ -26,16 +37,7 @@ const props = defineProps({
   },
 });
 
-const query = `
-  {
-    __type(name: "${props.graphQLEnumName}") {
-      enumValues {
-        name
-        description
-      }
-    }
-  }
-`;
+const query = computed(() => instropectEnumValue(props.graphQLEnumName));
 </script>
 <template>
   <div class="container mb-3" :aria-label="placeholder">
@@ -43,17 +45,16 @@ const query = `
       :loadingMensage="`Loading <b>${label}</b> options...`"
       :errorMensage="`Something went wrong, it was not possible to load <b> ${label} </b> options`"
       :query="query"
-      @onResult="(r) => (result = r)"
+      @onResult="result = $event"
     />
     <div v-if="result && result.length !== 0">
       <label for="tagsInput" class="fw-bold">{{ label }}</label>
       <TagsInput
         id="tagsInput"
         elementId="tags"
-        @tagAdded="(tag) => selectedTags.push(tag)"
+        @tagAdded="selectedTags.push($event)"
         @tagRemoved="
-          (tag) =>
-            (selectedTags = selectedTags.filter((v) => v.key !== tag.key))
+          (selectedTags = selectedTags.filter((v) => v.key !== $event.key))
         "
         :existingTags="
           result.__type.enumValues.map((type) => {

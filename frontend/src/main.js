@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { createApp } from "vue";
 import App from "./App.vue";
 import "./assets/main.css";
+import { graphQlUrl } from "./common/helpers";
 
 const cache = new InMemoryCache({
   addTypename: false,
@@ -12,7 +13,7 @@ const cache = new InMemoryCache({
 
 const apolloClient = new ApolloClient({
   cache,
-  uri: "http://192.168.0.4:8080/api/v1/country",
+  uri: graphQlUrl,
 });
 
 const app = createApp(App);

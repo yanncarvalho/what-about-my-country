@@ -17,6 +17,8 @@
     "cors": "^2.8.5",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
+    "jsdoc-vuejs": "^4.0.0",
+    "reset-css": "^5.0.1",
     "run": "^1.4.0",
     "vue": "^3.2.37",
     "vue-chartjs": "^4.1.2"

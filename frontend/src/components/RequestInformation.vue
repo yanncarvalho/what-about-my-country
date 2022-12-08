@@ -1,14 +1,12 @@
 <script setup>
 import { reactive, ref, watch } from "vue";
 import RequestInformationDatalist from "./RequestInformationDatalist.vue";
-import RequestInformationButton from "./RequestInformationButton.vue";
+import Button from "./ButtonComponent.vue";
 const selectedTags = reactive({
   country: [],
   indicator: [],
 });
-
 const hasBtnDisabled = ref(true);
-
 const emit = defineEmits(["onResult"]);
 
 function bindData() {
@@ -27,11 +25,7 @@ watch(selectedTags, () => {
 <template>
   <form action="javascript:void(0);">
     <RequestInformationDatalist
-      @selectedElements="
-        (v) => {
-          selectedTags.country = v;
-        }
-      "
+      @selectedElements="selectedTags.country = $event"
       label="Country"
       placeholder="Choose a Country"
       graphQLEnumName="Code"
@@ -39,17 +33,15 @@ watch(selectedTags, () => {
       :maxResult="6"
     />
     <RequestInformationDatalist
-      @selectedElements="
-        (v) => {
-          selectedTags.indicator = v;
-        }
-      "
+      @selectedElements="selectedTags.indicator = $event"
       label="Indicator"
       placeholder="Choose an Indicator"
       graphQLEnumName="IndicatorId"
       :alwaysShowOptions="true"
     />
-    <RequestInformationButton
+
+    <Button
+      typeBtn="submit"
       :disabled="selectedTags.country.length === 0 || hasBtnDisabled"
       @click="bindData"
       value="Show me these countries"
