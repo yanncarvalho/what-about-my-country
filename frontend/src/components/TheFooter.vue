@@ -1,5 +1,5 @@
 <script setup>
-import { getLogoUrl } from "@/common/helpers";
+import { getLogoUrl } from "../common/helpers";
 import SocialMediaLink from "./SocialMediaLink.vue";
 </script>
 <template>

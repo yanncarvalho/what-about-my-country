@@ -23,6 +23,7 @@ const props = defineProps({
 <template>
   <div class="d-flex container justify-content-center">
     <input
+      ref="BtnButtonComponent"
       :type="typeBtn === 'submit' ? 'submit' : 'button'"
       :value="value"
       :disabled="disabled"

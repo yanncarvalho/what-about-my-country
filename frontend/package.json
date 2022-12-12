@@ -6,6 +6,7 @@
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "test:unit": "vitest --environment jsdom",
+    "test": "vitest --dom",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
@@ -17,6 +18,7 @@
     "cors": "^2.8.5",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
+    "happy-dom": "^8.1.0",
     "jsdoc-vuejs": "^4.0.0",
     "reset-css": "^5.0.1",
     "run": "^1.4.0",
@@ -28,12 +30,12 @@
     "@vitejs/plugin-vue": "^3.0.1",
     "@voerro/vue-tagsinput": "^2.7.1",
     "@vue/eslint-config-prettier": "^7.0.0",
-    "@vue/test-utils": "^2.0.2",
+    "@vue/test-utils": "^2.2.6",
     "eslint": "^8.21.0",
     "eslint-plugin-vue": "^9.3.0",
     "jsdom": "^20.0.0",
     "prettier": "^2.7.1",
     "vite": "^3.0.4",
-    "vitest": "^0.21.0"
+    "vitest": "^0.21.1"
   }
 }

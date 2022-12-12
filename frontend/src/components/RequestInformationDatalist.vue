@@ -50,6 +50,7 @@ const query = computed(() => instropectEnumValue(props.graphQLEnumName));
     <div v-if="result && result.length !== 0">
       <label for="tagsInput" class="fw-bold">{{ label }}</label>
       <TagsInput
+        ref="tagsInput"
         id="tagsInput"
         elementId="tags"
         @tagAdded="selectedTags.push($event)"

@@ -9,6 +9,9 @@ const selectedTags = reactive({
 const hasBtnDisabled = ref(true);
 const emit = defineEmits(["onResult"]);
 
+/**
+ * @description action when click button
+ */
 function bindData() {
   let result = JSON.parse(JSON.stringify(selectedTags));
   emit("onResult", result);
@@ -42,6 +45,7 @@ watch(selectedTags, () => {
 
     <Button
       typeBtn="submit"
+      ref="showCountriesBtn"
       :disabled="selectedTags.country.length === 0 || hasBtnDisabled"
       @click="bindData"
       value="Show me these countries"

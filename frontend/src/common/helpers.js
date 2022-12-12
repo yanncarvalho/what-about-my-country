@@ -61,7 +61,7 @@ export const referenceSource = {
 /**
  * @description bakend url endpoint
  */
-export const graphQlUrl = "http://192.168.0.4:8080/api/v1/country";
+export const graphQlUrl = "http://192.168.0.5:8080/api/v1/country";
 
 /**
  * @description get chart-data-not-found image url
@@ -115,7 +115,6 @@ export function scrollToId(id) {
 
 /**
  * @description Generate a random hexadecimal color
- *
  * @returns {string} an String with color in hexadecimal
  */
 const genRandomColor = () =>
@@ -134,7 +133,7 @@ export function stringifyKeyObj(obj) {
 /**
  * @description convert an indicator in a datachart
  * @param {Indicator} indicator indicator to be converted
- * @returns { DataChart} dataChart from an indicator
+ * @returns {DataChart} dataChart from an indicator
  */
 function convIndiToDataChart(indicator) {
   return indicator.reduce(

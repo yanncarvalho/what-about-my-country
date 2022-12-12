@@ -8,11 +8,11 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  loadingMensage: {
+  loadingMessage: {
     type: String,
     default: "Loading...",
   },
-  errorMensage: {
+  errorMessage: {
     type: String,
     default: "It was not possible to load",
   },
@@ -28,23 +28,25 @@ const { result, error, loading } = useQuery(
 
 const emit = defineEmits(["onResult"]);
 
-watch(result, () => {
-  emit("onResult", result.value);
+watch(result, (res) => {
+  emit("onResult", res);
 });
 </script>
 
 <template>
   <div
+    ref="error"
     v-if="error"
     class="alert alert-danger text-center"
     role="alert"
-    v-html="errorMensage"
+    v-html="errorMessage"
   ></div>
 
   <div
+    ref="loading"
     v-else-if="loading"
     class="alert alert-dark text-center"
     role="alert"
-    v-html="loadingMensage"
+    v-html="loadingMessage"
   ></div>
 </template>

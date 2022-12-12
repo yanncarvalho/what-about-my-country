@@ -18,6 +18,7 @@ function onErrorGetFlagNotFound(event) {
 <template>
   <div class="card h-100">
     <img
+      ref="cardImg"
       class="card-img-top card-img"
       :alt="`Flag of ${countryInfo.name}`"
       :src="getFlagUrl(countryInfo.id.toLowerCase()).href"
