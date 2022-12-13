@@ -1,7 +1,9 @@
 <!-- eslint-disable no-unused-vars -->
 <script setup>
 import ViewInformationSource from "./ViewInformationSource.vue";
-import { getFlagUrl, getFlagNotFound } from "../common/helpers";
+import { inject } from "vue";
+
+const { FLAG } = inject("application_config");
 
 const props = defineProps({
   countryInfo: {
@@ -10,8 +12,23 @@ const props = defineProps({
   },
 });
 
+/**
+ * @description create flag image url
+ * @param {string} flagCode country code of the flag
+ * @returns {URL} flag image url
+ */
+function getFlagUrl(flagCode) {
+  const { BASE_URL, IMAGE_FORMAT } = FLAG.REQUEST;
+  const path = `${BASE_URL}/${flagCode}.${IMAGE_FORMAT}`;
+  return new URL(path, import.meta.url);
+}
+
+/**
+ * @description set event src with flag_not_found url
+ * @param {Event} event error Event
+ */
 function onErrorGetFlagNotFound(event) {
-  event.target.src = getFlagNotFound().href;
+  event.target.src = new URL(FLAG.NOT_FOUND, import.meta.url);
 }
 </script>
 

@@ -1,16 +1,18 @@
 <script setup>
-import { ref } from "vue";
+import { ref, inject } from "vue";
 import RequestInformation from "./components/RequestInformation.vue";
 import Footer from "./components/TheFooter.vue";
 import Header from "./components/TheHeader.vue";
 import ViewInformation from "./components/ViewInformation.vue";
-import { referenceSource, scrollToId } from "./common/helpers.js";
+import { scrollToId } from "./common/helpers.js";
 
 const formResult = ref({
   country: Map,
   indicator: Map,
 });
 const reqInfoId = "requestInfo";
+
+const { REFERENCE_SOURCE } = inject("application_config");
 </script>
 
 <template>
@@ -29,7 +31,7 @@ const reqInfoId = "requestInfo";
           We provide information from the World Bank database and create graphs
           with this information.
           <br />
-          <a :href="referenceSource.url" target="_blank">
+          <a :href="REFERENCE_SOURCE.URL" target="_blank">
             Read more about World Bank database
           </a>
         </p>
