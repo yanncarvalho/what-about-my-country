@@ -18,6 +18,7 @@ describe("Test Component RequestInformationDatalist", () => {
       value: baseValueMock,
     };
   });
+
   /**
    * @description Mount RequestInformationDatalist Component and emit its event onResult
    * @returns {RequestInformationDatalist} RequestInformationDatalist Component

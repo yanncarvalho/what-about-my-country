@@ -11,7 +11,7 @@ const props = defineProps({
 });
 
 function onErrorGetFlagNotFound(event) {
-  event.target.src = getFlagNotFound().href;
+  event.target.src = getFlagNotFound();
 }
 </script>
 
@@ -21,7 +21,7 @@ function onErrorGetFlagNotFound(event) {
       ref="cardImg"
       class="card-img-top card-img"
       :alt="`Flag of ${countryInfo.name}`"
-      :src="getFlagUrl(countryInfo.id.toLowerCase()).href"
+      :src="getFlagUrl(countryInfo.id.toLowerCase())"
       @error="onErrorGetFlagNotFound($event)"
     />
     <h4

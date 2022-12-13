@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-labels */
-import { describe, it, expect, vi, beforeAll } from "vitest";
+import { describe, it, expect, vi, beforeAll, afterEach } from "vitest";
 import { ref } from "vue";
 import { mount, shallowMount } from "@vue/test-utils";
 import GraphQLComponent from "src/components/GraphQLComponent.vue";
@@ -19,9 +19,12 @@ describe("Test Component GraphQLComponent", () => {
     };
     apollo = await import("@vue/apollo-composable");
   });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   describe("When error in receiving graphQL information", () => {
-    beforeAll(async () => {
+    beforeAll(() => {
       apollo.useQuery = () => {
         return {
           result: ref(undefined),
@@ -43,7 +46,7 @@ describe("Test Component GraphQLComponent", () => {
     });
   });
   describe("When loading graphQL information", () => {
-    beforeAll(async () => {
+    beforeAll(() => {
       apollo.useQuery = () => {
         return {
           result: ref(undefined),
@@ -65,7 +68,7 @@ describe("Test Component GraphQLComponent", () => {
   });
   describe("When success in receiving  graphQL information", () => {
     const emitResult = "onResult";
-    beforeAll(async () => {
+    beforeAll(() => {
       apollo.useQuery = () => {
         return {
           result: ref([]),
