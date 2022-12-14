@@ -10,10 +10,10 @@ import {
 import "chart.js/auto";
 import { computed } from "vue";
 import { Line } from "vue-chartjs";
-import { getChartDataNotFoundUrl } from "../common/helpers";
 import ViewInformationSource from "./ViewInformationSource.vue";
+import { inject } from "vue";
 
-Chart.register(Title, Tooltip, Legend, CategoryScale, LinearScale);
+const { CHART } = inject("application_config");
 
 const props = defineProps({
   labels: {
@@ -45,6 +45,8 @@ const dataCollection = computed(
       datasets: props.datasets,
     })
 );
+
+Chart.register(Title, Tooltip, Legend, CategoryScale, LinearScale);
 </script>
 <template>
   <div class="pb-4">
@@ -60,8 +62,9 @@ const dataCollection = computed(
         class="d-flex justify-content-center"
       >
         <img
+          ref="notFoungImg"
           class="img-fluid p-2"
-          :src="getChartDataNotFoundUrl()"
+          :src="CHART.NOT_FOUND_PATH"
           alt="No data found from these countries"
         />
       </div>

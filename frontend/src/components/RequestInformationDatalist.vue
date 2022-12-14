@@ -2,7 +2,7 @@
 import TagsInput from "@voerro/vue-tagsinput";
 import { ref, computed } from "vue";
 import GraphQLComponent from "./GraphQLComponent.vue";
-import { instropectEnumValue } from "../common/schemas.js";
+import { instropectEnumValue } from "/src/common/schemas.js";
 
 const selectedTags = ref(new Array());
 const result = ref(new Array());

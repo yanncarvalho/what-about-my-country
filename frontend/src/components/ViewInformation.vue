@@ -4,8 +4,8 @@ import {
   genChartsIndicator,
   stringifyKeyObj,
   scrollToId,
-} from "../common/helpers";
-import { selectCountries } from "../common/schemas";
+} from "@/common/helpers.js";
+import { selectCountries } from "@/common/schemas.js";
 import GraphQLComponent from "./GraphQLComponent.vue";
 import ViewInformationCard from "./ViewInformationCard.vue";
 import ViewInformationChart from "./ViewInformationChart.vue";

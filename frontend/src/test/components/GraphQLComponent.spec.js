@@ -29,7 +29,7 @@ describe("Test Component GraphQLComponent", () => {
         return {
           result: ref(undefined),
           loading: ref(undefined),
-          error: ref(new Object()),
+          error: ref([]),
         };
       };
     });
@@ -51,7 +51,7 @@ describe("Test Component GraphQLComponent", () => {
         return {
           result: ref(undefined),
           error: ref(undefined),
-          loading: ref(new Object()),
+          loading: ref([]),
         };
       };
     });

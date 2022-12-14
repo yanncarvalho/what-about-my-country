@@ -51,58 +51,6 @@
  */
 
 /**
- * @description source reference
- */
-export const referenceSource = {
-  url: "https://databank.worldbank.org/",
-  name: "World Bank",
-};
-
-/**
- * @description bakend url endpoint
- */
-export const graphQlUrl = "http://192.168.0.5:8080/api/v1/country";
-
-/**
- * @description get chart-data-not-found image url
- * @returns {URL} flag chart-data-not-found image url
- */
-export function getChartDataNotFoundUrl() {
-  const url = "../assets/chart-not-found-data.png";
-  return new URL(url, import.meta.url);
-}
-
-/**
- * @description get logo image url
- * @returns {URL} flag logo image url
- */
-export function getLogoUrl() {
-  const url = "../assets/logo.svg";
-  return new URL(url, import.meta.url);
-}
-
-/**
- * @description find flag image url
- * @param {string} flagCode country code of the flag
- * @returns {URL} flag image url
- */
-export function getFlagUrl(flagCode) {
-  const baseUrl = " https://flagcdn.com/w640/";
-  const imageFormat = "webp";
-  const fullUrl = baseUrl + flagCode + "." + imageFormat;
-  return new URL(fullUrl, import.meta.url);
-}
-
-/**
- * @description define flag-not-url
- * @returns {URL}  flag-not-url image url
- */
-export function getFlagNotFound() {
-  let notFoundFlagUrl = "../assets/flag-not-found.png";
-  return new URL(notFoundFlagUrl, import.meta.url);
-}
-
-/**
  * @description scroll to element with the id informed if the element exists
  * @param {string} id element Id
  */

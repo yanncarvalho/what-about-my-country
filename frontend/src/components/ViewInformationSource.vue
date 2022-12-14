@@ -1,16 +1,17 @@
 <script setup>
-import { referenceSource } from "../common/helpers.js";
+import { inject } from "vue";
+const { REFERENCE_SOURCE } = inject("application_config");
 </script>
 <template>
   <small class="text-muted">
     Source:&nbsp;
     <a
-      :href="referenceSource.url"
+      :href="REFERENCE_SOURCE.URL"
       target="_blank"
-      :title="referenceSource.name"
+      :title="REFERENCE_SOURCE.NAME"
       aria-label="Link to see data source information"
     >
-      {{ referenceSource.name }}
+      {{ REFERENCE_SOURCE.NAME }}
     </a>
   </small>
 </template>
