@@ -16,6 +16,7 @@ const apolloClient = new ApolloClient({
   cache,
   uri: config.BACKEND.COUNTRY_URL,
 });
+
 const app = createApp(App);
 app.provide(DefaultApolloClient, apolloClient);
 app.provide("application_config", config);

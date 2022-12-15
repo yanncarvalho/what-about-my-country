@@ -4,15 +4,15 @@ import {
   genChartsIndicator,
   stringifyKeyObj,
   scrollToId,
-} from "@/common/helpers.js";
-import { selectCountries } from "@/common/schemas.js";
+} from "/src/common/helpers.js";
+import { selectCountries } from "/src/common/schemas.js";
 import GraphQLComponent from "./GraphQLComponent.vue";
 import ViewInformationCard from "./ViewInformationCard.vue";
 import ViewInformationChart from "./ViewInformationChart.vue";
 import Button from "./ButtonComponent.vue";
 
 const result = ref();
-const indicators = ref();
+const chartData = ref();
 
 const props = defineProps({
   countries: {
@@ -27,10 +27,13 @@ const query = computed(() => {
 });
 const cardId = "cardId";
 
+const emit = defineEmits(["clickBtn"]);
+
+function clickBtn(event) {
+  emit("clickBtn", event);
+}
 watch(result, (res) => {
-  const indicator = props.countries.indicator;
-  const countries = res.country;
-  indicators.value = genChartsIndicator(indicator, countries);
+  chartData.value = genChartsIndicator(res.country);
 });
 
 onUpdated(() => {
@@ -47,10 +50,7 @@ onUpdated(() => {
       @onResult="result = $event"
     />
     <div v-if="result && result.length !== 0">
-      <section
-        class="container-fluid bg-primary my-3 py-2"
-        v-if="result && result.length !== 0"
-      >
+      <section class="container-fluid bg-primary my-3 py-2">
         <div class="container">
           <h3 class="fw-bold">Countries</h3>
           <div
@@ -58,7 +58,10 @@ onUpdated(() => {
           >
             <div v-for="country in result.country" :key="country.id">
               <div class="col">
-                <ViewInformationCard :countryInfo="country" />
+                <ViewInformationCard
+                  ref="viewInformationCard"
+                  :countryInfo="country"
+                />
               </div>
             </div>
           </div>
@@ -66,29 +69,33 @@ onUpdated(() => {
       </section>
       <section
         class="my-4 bg-primary container-fluid"
-        v-if="indicators && Object.keys(indicators).length !== 0"
+        v-if="chartData && Object.keys(chartData).length !== 0"
       >
         <div class="container-lg pt-2">
           <h3 class="fw-bold">Charts</h3>
-          <div v-for="indicator in indicators" :key="indicator.id">
+          <div v-for="datum in chartData" :key="datum.id">
             <ViewInformationChart
-              :datasets="indicator.datasets"
-              :labels="indicator.labels"
-              :description="indicator.description"
+              ref="viewInformationChart"
+              :datasets="datum.datasets"
+              :labels="datum.labels"
+              :description="datum.description"
               :countriesWithoutData="
                 result.country
-                  .filter(({ id }) => !indicator.countryIds.has(id))
+                  .filter(({ id }) => !datum.countryIds.has(id))
                   .map(({ name }) => name)
               "
             />
           </div>
         </div>
       </section>
-      <Button
-        @click="$emit('clickBtn', $event)"
-        value="Go back to choose more countries!"
-        ariaLabel="Click to roll back to choose more countris"
-      />
+      <div class="d-flex container justify-content-center">
+        <Button
+          ref="buttonComponent"
+          @click="clickBtn($event)"
+          value="Go back to choose more countries!"
+          ariaLabel="Click to roll back to choose more countris"
+        />
+      </div>
     </div>
   </article>
 </template>

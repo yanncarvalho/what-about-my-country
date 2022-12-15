@@ -1,10 +1,10 @@
-<!-- eslint-disable no-unused-vars -->
 <script setup>
 import ViewInformationSource from "./ViewInformationSource.vue";
 import { inject } from "vue";
 
 const { FLAG } = inject("application_config");
 
+// eslint-disable-next-line no-unused-vars
 const props = defineProps({
   countryInfo: {
     type: Object,

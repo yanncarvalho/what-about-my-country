@@ -6,7 +6,7 @@ describe("Test Component RequestInformation", () => {
   /**
    * @description find ButtonComponent
    * @param {RequestInformation} parent RequestInformation where will be found
-   * @returns {ButtonComponent} ButtonComponent
+   * @returns {ButtonComponent} buttonComponent
    */
   function createButtonComponent(parent) {
     return parent.findComponent({
@@ -17,8 +17,8 @@ describe("Test Component RequestInformation", () => {
   describe("Test event when ButtonComponent is clicked", () => {
     it("should emit onResult event when ButtonComponent is clicked", async () => {
       const wrapper = shallowMount(RequestInformation);
-      const ButtonComponent = createButtonComponent(wrapper);
-      ButtonComponent.trigger("click");
+      const buttonComponent = createButtonComponent(wrapper);
+      buttonComponent.trigger("click");
       await wrapper.vm.$nextTick();
       expect(wrapper.emitted()).toHaveProperty("onResult");
     });
@@ -32,41 +32,41 @@ describe("Test Component RequestInformation", () => {
   describe("Test when ButtonComponent is disabled", () => {
     it("should be enabled when selectedTags.country is not empty and ButtonComponent has not click", async () => {
       const wrapper = shallowMount(RequestInformation);
-      const ButtonComponent = createButtonComponent(wrapper);
+      const buttonComponent = createButtonComponent(wrapper);
       wrapper.vm.selectedTags.country = ["ANY VALUE"];
-      await ButtonComponent.vm.$nextTick();
-      expect(ButtonComponent.vm.disabled).toBeFalsy();
+      await buttonComponent.vm.$nextTick();
+      expect(buttonComponent.vm.disabled).toBeFalsy();
     });
 
     it("should be disabled when selectedTags.country is emmpty", async () => {
       const wrapper = shallowMount(RequestInformation);
-      const ButtonComponent = createButtonComponent(wrapper);
+      const buttonComponent = createButtonComponent(wrapper);
       wrapper.vm.selectedTags.country = [];
-      await ButtonComponent.vm.$nextTick();
-      expect(ButtonComponent.vm.disabled).toBeTruthy();
+      await buttonComponent.vm.$nextTick();
+      expect(buttonComponent.vm.disabled).toBeTruthy();
     });
 
     it("should be disabled when has been clicked and selectedTags has not changed", async () => {
       const wrapper = shallowMount(RequestInformation);
-      const ButtonComponent = createButtonComponent(wrapper);
+      const buttonComponent = createButtonComponent(wrapper);
       wrapper.vm.selectedTags.country = ["ANY_VALUE"];
       await wrapper.vm.$nextTick();
-      ButtonComponent.trigger("click");
-      await ButtonComponent.vm.$nextTick();
-      expect(ButtonComponent.vm.disabled).toBeTruthy();
+      buttonComponent.trigger("click");
+      await buttonComponent.vm.$nextTick();
+      expect(buttonComponent.vm.disabled).toBeTruthy();
     });
 
     it("should be enabled when has been clicked and selectedTags has changed", async () => {
       const wrapper = shallowMount(RequestInformation);
-      const ButtonComponent = createButtonComponent(wrapper);
+      const buttonComponent = createButtonComponent(wrapper);
       wrapper.vm.selectedTags.country = ["ANY_VALUE"];
       await wrapper.vm.$nextTick();
-      ButtonComponent.trigger("click");
-      await ButtonComponent.vm.$nextTick();
-      expect(ButtonComponent.vm.disabled).toBeTruthy();
+      buttonComponent.trigger("click");
+      await buttonComponent.vm.$nextTick();
+      expect(buttonComponent.vm.disabled).toBeTruthy();
       wrapper.vm.selectedTags.indicator = ["NEW_VALUE"];
       await wrapper.vm.$nextTick();
-      expect(ButtonComponent.vm.disabled).toBeFalsy();
+      expect(buttonComponent.vm.disabled).toBeFalsy();
     });
   });
 });

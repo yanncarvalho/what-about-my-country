@@ -21,16 +21,12 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="d-flex container justify-content-center">
-    <input
-      ref="BtnButtonComponent"
-      :type="typeBtn === 'submit' ? 'submit' : 'button'"
-      :value="value"
-      :disabled="disabled"
-      :title="value"
-      :aria-label="ariaLabel"
-      @click="$emit('click', $event)"
-      class="btn btn-primary text-wrap px-sm-5 mb-2"
-    />
-  </div>
+  <input
+    :type="typeBtn === 'submit' ? 'submit' : 'button'"
+    :value="value"
+    :disabled="disabled"
+    :title="value"
+    :aria-label="ariaLabel"
+    class="btn btn-primary text-wrap px-sm-5 mb-2"
+  />
 </template>

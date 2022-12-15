@@ -1,21 +1,12 @@
-import { describe, it, beforeAll, vi, expect } from "vitest";
 import { mount } from "@vue/test-utils";
 import ViewInformationCard from "src/components/ViewInformationCard.vue";
-import { application_config } from "src/test/CommonMock.js";
-describe("Test Component ViewInformationCard", async () => {
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { application_config, countryInfoMock } from "../commonMock.js";
+describe("Test Component ViewInformationCard", () => {
   let propsMock;
-  beforeAll(() => {
-    const baseValueMock = "Test";
+  beforeEach(() => {
     propsMock = {
-      countryInfo: {
-        id: baseValueMock,
-        name: baseValueMock,
-        capitalCity: baseValueMock,
-        region: baseValueMock,
-        incomeLevel: baseValueMock,
-        latitude: baseValueMock,
-        longitude: baseValueMock,
-      },
+      countryInfo: countryInfoMock,
     };
   });
 

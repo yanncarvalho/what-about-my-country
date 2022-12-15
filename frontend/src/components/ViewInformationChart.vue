@@ -62,7 +62,7 @@ Chart.register(Title, Tooltip, Legend, CategoryScale, LinearScale);
         class="d-flex justify-content-center"
       >
         <img
-          ref="notFoungImg"
+          ref="notFoundImg"
           class="img-fluid p-2"
           :src="CHART.NOT_FOUND_PATH"
           alt="No data found from these countries"
@@ -70,6 +70,7 @@ Chart.register(Title, Tooltip, Legend, CategoryScale, LinearScale);
       </div>
       <Line
         v-else
+        ref="chart"
         :chartData="dataCollection"
         :height="chartHeight"
         class="pb-2 pt-0 px-2"

@@ -10,7 +10,7 @@ const formResult = ref({
   country: Map,
   indicator: Map,
 });
-const reqInfoId = "requestInfo";
+const reqInfoId = "requestInformation";
 
 const { REFERENCE_SOURCE } = inject("application_config");
 </script>
@@ -37,8 +37,9 @@ const { REFERENCE_SOURCE } = inject("application_config");
         </p>
       </section>
     </div>
-    <RequestInformation @onResult="(r) => (formResult = r)" :id="reqInfoId" />
+    <RequestInformation @onResult="formResult = $event" :id="reqInfoId" />
     <ViewInformation
+      ref="viewInformation"
       v-if="formResult.country !== null && formResult.country.length !== 0"
       :countries="formResult"
       @clickBtn="scrollToId(reqInfoId)"

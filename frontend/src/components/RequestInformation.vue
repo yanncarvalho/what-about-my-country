@@ -2,6 +2,7 @@
 import { reactive, ref, watch } from "vue";
 import RequestInformationDatalist from "./RequestInformationDatalist.vue";
 import Button from "./ButtonComponent.vue";
+
 const selectedTags = reactive({
   country: [],
   indicator: [],
@@ -42,14 +43,15 @@ watch(selectedTags, () => {
       graphQLEnumName="IndicatorId"
       :alwaysShowOptions="true"
     />
-
-    <Button
-      typeBtn="submit"
-      ref="showCountriesBtn"
-      :disabled="selectedTags.country.length === 0 || hasBtnDisabled"
-      @click="bindData"
-      value="Show me these countries"
-      ariaLabel="Click to show information about selected countries"
-    />
+    <div class="d-flex container justify-content-center">
+      <Button
+        typeBtn="submit"
+        ref="showCountriesBtn"
+        :disabled="selectedTags.country.length === 0 || hasBtnDisabled"
+        @click="bindData"
+        value="Show me these countries"
+        ariaLabel="Click to show information about selected countries"
+      />
+    </div>
   </form>
 </template>

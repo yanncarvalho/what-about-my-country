@@ -3,12 +3,12 @@ import { shallowMount } from "@vue/test-utils";
 import RequestInformationDatalist from "src/components/RequestInformationDatalist.vue";
 
 describe("Test Component RequestInformationDatalist", () => {
-  let resultMock;
+  let resultGraphQLMock;
   let tagMock;
   beforeAll(() => {
     const baseValueMock = "Test";
 
-    resultMock = {
+    resultGraphQLMock = {
       __type: {
         enumValues: [{ name: baseValueMock, description: baseValueMock }],
       },
@@ -30,7 +30,7 @@ describe("Test Component RequestInformationDatalist", () => {
     const wrapper = shallowMount(RequestInformationDatalist, {
       props: propsMock,
     });
-    wrapper.vm.result = resultMock;
+    wrapper.vm.result = resultGraphQLMock;
     await wrapper.trigger("onResult");
     return wrapper;
   }
