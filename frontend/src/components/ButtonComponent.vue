@@ -13,6 +13,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  id: {
+    type: String,
+    required: true,
+  },
   typeBtn: {
     type: String,
     default: "button",
@@ -22,6 +26,8 @@ const props = defineProps({
 
 <template>
   <input
+    :ref="id"
+    :id="id"
     :type="typeBtn === 'submit' ? 'submit' : 'button'"
     :value="value"
     :disabled="disabled"

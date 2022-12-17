@@ -1,8 +1,5 @@
 <script setup>
 import ViewInformationSource from "./ViewInformationSource.vue";
-import { inject } from "vue";
-
-const { FLAG } = inject("application_config");
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
@@ -13,22 +10,25 @@ const props = defineProps({
 });
 
 /**
- * @description create flag image url
- * @param {string} flagCode country code of the flag
- * @returns {URL} flag image url
+ * @description get image flag url
+ * @param {string} flagCode country code for the flag
+ * @returns {URL} image flag url
  */
 function getFlagUrl(flagCode) {
-  const { BASE_URL, IMAGE_FORMAT } = FLAG.REQUEST;
-  const path = `${BASE_URL}/${flagCode}.${IMAGE_FORMAT}`;
+  const baseUrl = __APP_ENV__.FLAG_REQUEST_BASE_URL;
+  const imageFormat = __APP_ENV__.FLAG_REQUEST_IMAGE_FORMAT;
+
+  const path = `${baseUrl}/${flagCode}.${imageFormat}`;
   return new URL(path, import.meta.url);
 }
 
 /**
  * @description set event src with flag_not_found url
- * @param {Event} event error Event
+ * @param {Event} event error event
  */
 function getErrorGetFlagNotFound(event) {
-  event.target.src = new URL(FLAG.NOT_FOUND, import.meta.url);
+  const flagNotFound = __APP_ENV__.FLAG_NOT_FOUND_PATH;
+  event.target.src = new URL(flagNotFound, import.meta.url);
 }
 </script>
 

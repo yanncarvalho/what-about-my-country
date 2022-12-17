@@ -23,7 +23,8 @@ export const selectCountries = (codes, ids) => `
         }
       }
     }
-   }`;
+   }
+`;
 
 /**
  * @description query to instropect graphql enumValues

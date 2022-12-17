@@ -1,14 +1,12 @@
 <script setup>
 import LogoHeaderText from "./LogoHeaderText.vue";
-import { inject } from "vue";
-
-const { LOGO } = inject("application_config");
+const logoPath = __APP_ENV__.LOGO_PATH;
 </script>
 
 <template>
   <h1 class="justify-content-center text-center" role="presentation">
     <img
-      :src="LOGO.PATH"
+      :src="logoPath"
       alt="App logo"
       class="logo-img-880-resize me-1"
       width="110"

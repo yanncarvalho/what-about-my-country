@@ -1,15 +1,13 @@
 <script setup>
 import SocialMediaLink from "./SocialMediaLink.vue";
-import { inject } from "vue";
-
-const { LOGO } = inject("application_config");
+const logoPath = __APP_ENV__.LOGO_PATH;
 </script>
 <template>
   <footer
     class="bg-headfoot p-5 mt-5 mb-0 text-center container-fluid d-sm-inline-flex justify-content-center align-items-center"
   >
     <img
-      :src="LOGO.PATH"
+      :src="logoPath"
       alt="App logo"
       class="me-sm-5 logo-img-sm-resize pb-sm-20px pt-1"
       width="200"

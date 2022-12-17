@@ -1,17 +1,19 @@
 <script setup>
-import { inject } from "vue";
-const { REFERENCE_SOURCE } = inject("application_config");
+const referenceSrc = {
+  url: __APP_ENV__.REFERENCE_SOURCE_URL,
+  name: __APP_ENV__.REFERENCE_SOURCE_NAME,
+};
 </script>
 <template>
   <small class="text-muted">
     Source:&nbsp;
     <a
-      :href="REFERENCE_SOURCE.URL"
+      :href="referenceSrc.url"
       target="_blank"
-      :title="REFERENCE_SOURCE.NAME"
+      :title="referenceSrc.name"
       aria-label="Link to see data source information"
     >
-      {{ REFERENCE_SOURCE.NAME }}
+      {{ referenceSrc.name }}
     </a>
   </small>
 </template>

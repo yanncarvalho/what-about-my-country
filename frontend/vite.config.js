@@ -1,19 +1,28 @@
+/* eslint-disable no-undef */
 import { fileURLToPath, URL } from "node:url";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
-import { config } from "./config";
+
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [vue()],
-  define: {
-    APPLICATION_CONFIG: config,
-  },
-  resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  return defineConfig({
+    plugins: [vue()],
+    resolve: {
+      alias: {
+        "@": fileURLToPath(new URL("./src", import.meta.url)),
+      },
     },
-  },
-  teste: {
-    environment: "happy-dom",
-  },
+    define: {
+      __APP_ENV__: env,
+    },
+    server: {
+      port: env.APP_PORT,
+      host: env.APP_HOST,
+      https: env.PROTOCOL === "https",
+    },
+    test: {
+      environment: "happy-dom",
+    },
+  });
 });

@@ -16,7 +16,7 @@ jobs:
         working-directory: ${{env.frontend-directory}}/
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [19.x]
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -26,4 +26,5 @@ jobs:
         cache-dependency-path: '${{env.frontend-directory}}/package-lock.json'
     - run: npm install
     - run: npm run build
+    - run: npm run test
 

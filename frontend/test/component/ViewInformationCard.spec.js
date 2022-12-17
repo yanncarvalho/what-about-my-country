@@ -1,34 +1,44 @@
 import { mount } from "@vue/test-utils";
 import ViewInformationCard from "src/components/ViewInformationCard.vue";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { application_config, countryInfoMock } from "../commonMock.js";
+import { countryInfoMock } from "../commonMock.js";
+
 describe("Test Component ViewInformationCard", () => {
   let propsMock;
   beforeEach(() => {
+    global.__APP_ENV__ = vi.fn();
     propsMock = {
       countryInfo: countryInfoMock,
     };
   });
 
   describe("Test flag image loading", () => {
-    it("should be called function getErrorGetFlagNotFound. when erro trying to load cardImg", async () => {
+    it("should call function getErrorGetFlagNotFound when erro trying to load cardImg", async () => {
+      //Arrange
       const wrapper = mount(ViewInformationCard, {
         props: propsMock,
-        global: { provide: { application_config } },
       });
       const cardImg = wrapper.find({ ref: "cardImg" });
+
+      //Act
       const spy = vi.spyOn(wrapper.vm, "getErrorGetFlagNotFound");
       await cardImg.trigger("error");
+
+      //Assert
       expect(spy).toBeCalled();
     });
 
-    it("should be called function getFlagUrl. when try to load cardImg", async () => {
+    it("should call function getFlagUrl when try to load cardImg", async () => {
+      //Arrange
       const wrapper = mount(ViewInformationCard, {
         props: propsMock,
-        global: { provide: { application_config } },
       });
+
+      //Act
       const spy = vi.spyOn(wrapper.vm, "getFlagUrl");
       await wrapper.vm.$forceUpdate();
+
+      //Assert
       expect(spy).toBeCalled();
     });
   });

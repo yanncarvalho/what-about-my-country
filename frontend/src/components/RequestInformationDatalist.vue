@@ -18,6 +18,10 @@ const props = defineProps({
     type: String,
     default: "Choose an element",
   },
+  id: {
+    type: String,
+    required: true,
+  },
   graphQLEnumName: {
     type: String,
     required: true,
@@ -50,8 +54,8 @@ const query = computed(() => instropectEnumValue(props.graphQLEnumName));
     <div v-if="result && result.length !== 0">
       <label for="tagsInput" class="fw-bold">{{ label }}</label>
       <TagsInput
-        ref="tagsInput"
-        id="tagsInput"
+        :ref="id"
+        :id="id"
         elementId="tags"
         @tagAdded="selectedTags.push($event)"
         @tagRemoved="

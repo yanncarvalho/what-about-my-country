@@ -11,13 +11,16 @@ import "chart.js/auto";
 import { computed } from "vue";
 import { Line } from "vue-chartjs";
 import ViewInformationSource from "./ViewInformationSource.vue";
-import { inject } from "vue";
 
-const { CHART } = inject("application_config");
+const chartNotFoudPath = __APP_ENV__.CHART_NOT_FOUND_PATH;
 
 const props = defineProps({
   labels: {
     type: Array,
+    required: true,
+  },
+  id: {
+    type: String,
     required: true,
   },
   datasets: {
@@ -56,7 +59,7 @@ Chart.register(Title, Tooltip, Legend, CategoryScale, LinearScale);
       {{ description }}
     </h4>
 
-    <div class="bg-white m-0 border border-top-0">
+    <div class="bg-white m-0 border border-top-0" :id="id">
       <div
         v-if="dataCollection.datasets.length === 0"
         class="d-flex justify-content-center"
@@ -64,13 +67,14 @@ Chart.register(Title, Tooltip, Legend, CategoryScale, LinearScale);
         <img
           ref="notFoundImg"
           class="img-fluid p-2"
-          :src="CHART.NOT_FOUND_PATH"
+          :src="chartNotFoudPath"
           alt="No data found from these countries"
         />
       </div>
       <Line
         v-else
         ref="chart"
+        :id="id"
         :chartData="dataCollection"
         :height="chartHeight"
         class="pb-2 pt-0 px-2"

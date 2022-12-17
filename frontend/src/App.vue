@@ -1,5 +1,5 @@
 <script setup>
-import { ref, inject } from "vue";
+import { ref } from "vue";
 import RequestInformation from "./components/RequestInformation.vue";
 import Footer from "./components/TheFooter.vue";
 import Header from "./components/TheHeader.vue";
@@ -11,8 +11,7 @@ const formResult = ref({
   indicator: Map,
 });
 const reqInfoId = "requestInformation";
-
-const { REFERENCE_SOURCE } = inject("application_config");
+const urlSource = __APP_ENV__.REFERENCE_SOURCE_URL;
 </script>
 
 <template>
@@ -31,7 +30,7 @@ const { REFERENCE_SOURCE } = inject("application_config");
           We provide information from the World Bank database and create graphs
           with this information.
           <br />
-          <a :href="REFERENCE_SOURCE.URL" target="_blank">
+          <a :href="urlSource" target="_blank">
             Read more about World Bank database
           </a>
         </p>

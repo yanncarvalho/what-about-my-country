@@ -49,7 +49,7 @@ onUpdated(() => {
       :query="query"
       @onResult="result = $event"
     />
-    <div v-if="result && result.length !== 0">
+    <div v-if="result && result.length !== 0" id="countries">
       <section class="container-fluid bg-primary my-3 py-2">
         <div class="container">
           <h3 class="fw-bold">Countries</h3>
@@ -71,11 +71,12 @@ onUpdated(() => {
         class="my-4 bg-primary container-fluid"
         v-if="chartData && Object.keys(chartData).length !== 0"
       >
-        <div class="container-lg pt-2">
+        <div class="container-lg pt-2" id="charts">
           <h3 class="fw-bold">Charts</h3>
           <div v-for="datum in chartData" :key="datum.id">
             <ViewInformationChart
               ref="viewInformationChart"
+              :id="`viewInformationChart${datum.id}`"
               :datasets="datum.datasets"
               :labels="datum.labels"
               :description="datum.description"
@@ -90,10 +91,10 @@ onUpdated(() => {
       </section>
       <div class="d-flex container justify-content-center">
         <Button
-          ref="buttonComponent"
+          id="goBackButton"
           @click="clickBtn($event)"
           value="Go back to choose more countries!"
-          ariaLabel="Click to roll back to choose more countris"
+          ariaLabel="Click to roll back to choose more countries"
         />
       </div>
     </div>

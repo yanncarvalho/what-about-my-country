@@ -32,6 +32,7 @@ watch(selectedTags, () => {
       @selectedElements="selectedTags.country = $event"
       label="Country"
       placeholder="Choose a Country"
+      id="datalistCountry"
       graphQLEnumName="Code"
       :isDropDown="true"
       :maxResult="6"
@@ -41,12 +42,13 @@ watch(selectedTags, () => {
       label="Indicator"
       placeholder="Choose an Indicator"
       graphQLEnumName="IndicatorId"
+      id="datalistIndicator"
       :alwaysShowOptions="true"
     />
     <div class="d-flex container justify-content-center">
       <Button
         typeBtn="submit"
-        ref="showCountriesBtn"
+        id="showCountriesBtn"
         :disabled="selectedTags.country.length === 0 || hasBtnDisabled"
         @click="bindData"
         value="Show me these countries"

@@ -65,7 +65,7 @@
 const COUNTRY_COLOR = new Object();
 
 /**
- * @description scroll to element with the id informed if the element exists
+ * @description scroll to element with the given id, if the element exists
  * @param {string} id element Id
  */
 export function scrollToId(id) {
@@ -85,8 +85,8 @@ export function genHexDecimalColor() {
 }
 
 /**
- * @description Convert an Object with in its values an attribute "key" into a string
- * @param {object} obj an object with in its values
+ * @description Convert an Object with attribute "key" into a string
+ * @param {object} obj an object with attribute "key"
  */
 export function stringifyKeyObj(obj) {
   const regex = /"/g;
@@ -95,7 +95,7 @@ export function stringifyKeyObj(obj) {
 }
 
 /**
- * @description convert an indicator in a datachart
+ * @description convert an indicator to a datachart
  * @param {[IdValue]} indicatorIdValue indicatorIdValue to be converted
  * @returns {DataChart} dataChart from an indicator
  */
@@ -116,7 +116,7 @@ function convIndiToDataChart(indicatorIdValue) {
 }
 
 /**
- * @description convert Country into an arrat of indicator IdValue
+ * @description convert Country to indicator IdValue array
  * @param {[Country]} countries country information
  * @returns {[IdValue]} indicators IdValue
  */
