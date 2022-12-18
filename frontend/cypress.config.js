@@ -8,6 +8,6 @@ module.exports = defineConfig({
 
   e2e: {
     specPattern: "test/e2e/*.cy.{js,jsx,ts,tsx}",
-    baseUrl: `${process.env.APP_PROTOCOL}://${process.env.APP_HOST}:${process.env.APP_PORT}`,
+    baseUrl: `${process.env.FRONTEND_PROTOCOL}://${process.env.FRONTEND_ADRESS}:${process.env.FRONTEND_PORT}`,
   },
 });

@@ -2,7 +2,7 @@ import os
 
 from .base import *
 
-profile = os.getenv('DJANGO_ENVIRONMENT', 'dev')
+profile = os.getenv('BACKEND_ENVIRONMENT')
 
 if profile == 'prod':
    from .prod import *

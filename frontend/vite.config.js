@@ -17,9 +17,9 @@ export default defineConfig(({ mode }) => {
       __APP_ENV__: env,
     },
     server: {
-      port: env.APP_PORT,
-      host: env.APP_HOST,
-      https: env.PROTOCOL === "https",
+      port: env.FRONTEND_PORT,
+      host: env.FRONTEND_ADRESS,
+      https: env.FRONTEND_PROTOCOL === "https",
     },
     test: {
       environment: "happy-dom",

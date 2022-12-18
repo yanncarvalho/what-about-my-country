@@ -1,6 +1,6 @@
 <script setup>
 import TagsInput from "@voerro/vue-tagsinput";
-import { ref, computed } from "vue";
+import { computed, ref } from "vue";
 import GraphQLComponent from "./GraphQLComponent.vue";
 import { instropectEnumValue } from "/src/common/schemas.js";
 
@@ -59,7 +59,7 @@ const query = computed(() => instropectEnumValue(props.graphQLEnumName));
         elementId="tags"
         @tagAdded="selectedTags.push($event)"
         @tagRemoved="
-          (selectedTags = selectedTags.filter((v) => v.key !== $event.key))
+          selectedTags = selectedTags.filter((v) => v.key !== $event.key)
         "
         :existingTags="
           result.__type.enumValues.map((type) => {

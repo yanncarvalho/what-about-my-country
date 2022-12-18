@@ -1,16 +1,15 @@
 import os
 from .base import *
 
-DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() == 'true'
+DEBUG = os.getenv('BACKEND_DEBUG').lower() == 'true'
 
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+SECRET_KEY = os.getenv('BACKEND_SECRET_KEY')
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = [os.getenv('BACKEND_ALLOWED_HOSTS')]
 #=---------------- CORS -----------------=#
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = os.getenv('BACKEND_CORS_ORIGIN_ALLOW_ALL').lower() == 'true'
 CORS_ORIGIN_WHITELIST = (
-    os.getenv('DJANGO_CORS_ORIGIN_URL')
+    os.getenv('BACKEND_CORS_ORIGIN_URL')
 )
 
 #=---------------- LOGGING SETTINGS -----------------=#
@@ -48,7 +47,7 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'level': os.getenv('BACKEND_LOG_LEVEL', 'INFO'),
             'propagate': False,
         },
     },

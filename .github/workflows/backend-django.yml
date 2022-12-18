@@ -11,6 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       backend-directory: ./backend
+      REDIS_PORT: 0
+      REDIS_EXPIRE_KEY_IN_DAYS: 0
+      REDIS_DB: 0
+      REDIS_DECODE_RESPONSES: true
+      BACKEND_DEBUG: true
+      BACKEND_CORS_ORIGIN_ALLOW_ALL: true
     defaults:
       run:
         working-directory: ${{env.backend-directory}}
