@@ -1,5 +1,5 @@
+import ViewInformationChart from "@/components/ViewInformationChart.vue";
 import { shallowMount } from "@vue/test-utils";
-import ViewInformationChart from "src/components/ViewInformationChart.vue";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 describe("Test Component ViewInformationChart", () => {
@@ -11,7 +11,7 @@ describe("Test Component ViewInformationChart", () => {
       datasets: [],
       description: "",
       countriesWithoutData: [],
-      id: "id",
+      idBase: "",
     };
   });
   describe("Test notFoundImg loading", () => {

@@ -9,6 +9,11 @@ export const indicatorsMock = {
   ],
 };
 
+export const indicatorsKeys = {
+  key: "id",
+  value: "description",
+};
+
 export const countryInfoMock = {
   id: "id",
   name: "name",

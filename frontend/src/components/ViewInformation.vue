@@ -1,15 +1,15 @@
 <script setup>
-import { computed, onUpdated, ref, watch } from "vue";
 import {
   genChartsIndicator,
-  stringifyKeyObj,
   scrollToId,
-} from "/src/common/helpers.js";
-import { selectCountries } from "/src/common/schemas.js";
+  stringifyKeyObj,
+} from "@/common/helpers.js";
+import { selectCountries } from "@/common/schemas.js";
+import { computed, onUpdated, ref, watch } from "vue";
+import Button from "./ButtonComponent.vue";
 import GraphQLComponent from "./GraphQLComponent.vue";
 import ViewInformationCard from "./ViewInformationCard.vue";
 import ViewInformationChart from "./ViewInformationChart.vue";
-import Button from "./ButtonComponent.vue";
 
 const result = ref();
 const chartData = ref();
@@ -33,7 +33,9 @@ function clickBtn(event) {
   emit("clickBtn", event);
 }
 watch(result, (res) => {
-  chartData.value = genChartsIndicator(res.country);
+  const indicator = props.countries.indicator;
+  const countries = res.country;
+  chartData.value = genChartsIndicator(indicator, countries);
 });
 
 onUpdated(() => {
@@ -44,21 +46,28 @@ onUpdated(() => {
 <template>
   <article :id="cardId">
     <GraphQLComponent
+      :idBase="`country-code-graphql`"
       :loadingMensage="`Loading information...`"
       :errorMensage="`Something went wrong, it was not possible to load information`"
       :query="query"
       @onResult="result = $event"
     />
+
     <div v-if="result && result.length !== 0" id="countries">
-      <section class="container-fluid bg-primary my-3 py-2">
+      <section
+        class="container-fluid bg-primary my-3 py-2"
+        id="viewinformation-section"
+      >
         <div class="container">
-          <h3 class="fw-bold">Countries</h3>
+          <h3 class="fw-bold" id="viewinformation-country-label">Countries</h3>
           <div
             class="row justify-content-start row-cols-1 row-cols-md-2 row-cols-lg-3 g-2"
+            data-cy="country-cards"
           >
             <div v-for="country in result.country" :key="country.id">
               <div class="col">
                 <ViewInformationCard
+                  :idBase="country.id"
                   ref="viewInformationCard"
                   :countryInfo="country"
                 />
@@ -73,10 +82,11 @@ onUpdated(() => {
       >
         <div class="container-lg pt-2" id="charts">
           <h3 class="fw-bold">Charts</h3>
+
           <div v-for="datum in chartData" :key="datum.id">
             <ViewInformationChart
               ref="viewInformationChart"
-              :id="`viewInformationChart${datum.id}`"
+              :idBase="datum.id"
               :datasets="datum.datasets"
               :labels="datum.labels"
               :description="datum.description"
@@ -91,6 +101,7 @@ onUpdated(() => {
       </section>
       <div class="d-flex container justify-content-center">
         <Button
+          data-cy="goBackButton"
           id="goBackButton"
           @click="clickBtn($event)"
           value="Go back to choose more countries!"

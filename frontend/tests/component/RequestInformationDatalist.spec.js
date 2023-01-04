@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { shallowMount } from "@vue/test-utils";
-import RequestInformationDatalist from "src/components/RequestInformationDatalist.vue";
+import RequestInformationDatalist from "@/components/RequestInformationDatalist.vue";
 
 describe("Test Component RequestInformationDatalist", () => {
   let resultGraphQLMock;

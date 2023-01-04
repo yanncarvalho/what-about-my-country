@@ -75,8 +75,8 @@ def _indicators_normalize(indicators: List[Dict[str, str]],
                                           'year': int(indi['date']),
                                           'value': value
                                         })
-    except Exception:
-       logging.error(f'Could not normalize: {indi}')
+    except Exception as e:
+       logging.error(f'Could not normalize {indi}',e)
   return result
 
 
@@ -135,8 +135,8 @@ def _country_basic_info_normalize(country: CountryAPIRequest, field_name: str) -
                  'latitude': float(country['latitude']),
                  'incomeLevel': _sanitize_string(country['incomeLevel']['value']),
              }}
-  except Exception:
-      logging.error(f'Could not normalize country: {country}')
+  except Exception as e:
+      logging.error(f'Could not normalize country {country}',e)
   return result
 
 
@@ -161,8 +161,8 @@ async def _request_wbank_api(session: aiohttp.ClientSession,
         json_resp = await resp.json()
         logging.info(f'requesting url: {url}')
         return json_resp
-  except Exception:
-    logging.error(f'error trying to request: {url}')
+  except Exception as e:
+    logging.error(f'error trying to request {url}',e)
 
 
 async def _get_items_wbank_api(urlBaseApiHttps: str, requests: Sequence[str]) -> List[CountryAPIRequest]:
@@ -183,8 +183,8 @@ async def _get_items_wbank_api(urlBaseApiHttps: str, requests: Sequence[str]) ->
         per_page: int = amount_items[0]['total']
         data: List[CountryAPIRequest] = await _request_wbank_api(session, urlBaseApiHttps, req, per_page)
         result += data[1]
-      except Exception:
-        logging.error(f'error trying to request: {req}')
+      except Exception as e:
+        logging.error(f'error trying to request {req}', e)
   return result
 
 

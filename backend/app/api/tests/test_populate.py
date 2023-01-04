@@ -14,15 +14,15 @@ class PopulateDBTest(SimpleTestCase):
     self.Populate.start_countries()
     country_save_from_net.assert_called()
 
-  @patch('app.api.populate.Populate._is_population', False)
-  def test_if_run_n_is_population_False_then_calls_start_populations(self):
+  @patch('app.api.populate.Populate._is_populating', False)
+  def test_if_run_n_is_populating_False_then_calls_start_populations(self):
    populate = self.Populate()
    populate.start_populations = Mock()  # override start_populations method
    populate.run()
    populate.start_populations.assert_called()
 
-  @patch('app.api.populate.Populate._is_population', True)
-  def test_if_run_n_is_population_True_then_not_calls_start_populations(self):
+  @patch('app.api.populate.Populate._is_populating', True)
+  def test_if_run_n_is_populating_True_then_not_calls_start_populations(self):
    populate = self.Populate()
    populate.start_populations = Mock()  # override start_populations method
    populate.run()

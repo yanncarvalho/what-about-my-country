@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-labels */
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { ref } from "vue";
+import GraphQLComponent from "@/components/GraphQLComponent.vue";
 import { mount, shallowMount } from "@vue/test-utils";
-import GraphQLComponent from "src/components/GraphQLComponent.vue";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ref } from "vue";
 
 describe("Test Component GraphQLComponent", () => {
   let apollo;
@@ -16,6 +16,7 @@ describe("Test Component GraphQLComponent", () => {
       query: "{}",
       errorMessage: errorMessage,
       loadingMessage: loadingMessage,
+      idBase: "",
     };
     apollo = await import("@vue/apollo-composable");
   });
@@ -33,7 +34,7 @@ describe("Test Component GraphQLComponent", () => {
     it("should show div with ref error when error in processing query", () => {
       //Arrange
       const wrapper = mount(GraphQLComponent, { props: propsMock });
-      const divError = wrapper.find({ ref: "error" });
+      const divError = wrapper.find({ ref: "error-div" });
 
       //Assert
       expect(divError.exists()).toBe(true);
@@ -60,7 +61,7 @@ describe("Test Component GraphQLComponent", () => {
     it("should show loading message when is processing query", () => {
       //Arrange
       const wrapper = mount(GraphQLComponent, { props: propsMock });
-      const loadingDiv = wrapper.find({ ref: "loading" });
+      const loadingDiv = wrapper.find({ ref: "loading-div" });
 
       //Assert
       expect(loadingDiv.exists()).toBe(true);

@@ -1,8 +1,8 @@
 <script setup>
+import { instropectEnumValue } from "@/common/schemas.js";
 import TagsInput from "@voerro/vue-tagsinput";
 import { computed, ref } from "vue";
 import GraphQLComponent from "./GraphQLComponent.vue";
-import { instropectEnumValue } from "/src/common/schemas.js";
 
 const selectedTags = ref(new Array());
 const result = ref(new Array());
@@ -46,6 +46,8 @@ const query = computed(() => instropectEnumValue(props.graphQLEnumName));
 <template>
   <div class="container mb-3" :aria-label="placeholder">
     <GraphQLComponent
+      :idBase="label"
+      :id="label"
       :loadingMensage="`Loading <b>${label}</b> options...`"
       :errorMensage="`Something went wrong, it was not possible to load <b> ${label} </b> options`"
       :query="query"

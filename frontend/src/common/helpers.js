@@ -103,8 +103,8 @@ function convIndiToDataChart(indicatorIdValue) {
   return indicatorIdValue.reduce(
     (o, item) => ({
       ...o,
-      [item.id]: new Object({
-        id: item.id,
+      [item.key]: new Object({
+        id: item.key,
         description: item.value,
         labels: new Array(),
         datasets: new Array(),
@@ -116,26 +116,14 @@ function convIndiToDataChart(indicatorIdValue) {
 }
 
 /**
- * @description convert Country to indicator IdValue array
- * @param {[Country]} countries country information
- * @returns {[IdValue]} indicators IdValue
- */
-function convCountryToIndiIdValue(countries) {
-  return countries
-    .flatMap((country) => country.indicators)
-    .map((indi) => {
-      return { id: indi.id, value: indi.description };
-    });
-}
-
-/**
  * @description generate indicator chart parameters
- * @param {[Country]} countries country information
- * @returns {DataChart} dataChart from an indicator
+ * @param {Indicator} indicator indicator
+ * @param {[Country]} countries countries
+ * @returns { DataChart} dataChart from an indicator
  */
-export function genChartsIndicator(countries) {
-  const indicatorIdValue = convCountryToIndiIdValue(countries);
-  const chartIndi = convIndiToDataChart(indicatorIdValue);
+export function genChartsIndicator(indicator, countries) {
+  const chartIndi = convIndiToDataChart(indicator);
+
   for (let country of countries) {
     for (let indi of country.indicators) {
       const indiData = indi.data.reduce(

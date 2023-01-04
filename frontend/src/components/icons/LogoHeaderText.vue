@@ -1,5 +1,6 @@
 <template>
   <svg
+    id="logo-text"
     height="74px"
     width="750px"
     class="svg-resize"

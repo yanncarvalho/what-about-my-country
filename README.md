@@ -1,6 +1,6 @@
 # What about my country? #
 
-[![backend](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/backend-django.yml/badge.svg?branch=main)](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/backend-django.yml) [![frontend](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/frontend-vue.yml/badge.svg)](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/frontend-vue.yml)
+[![build](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/build.yml)
 
 A web application that provides information about different countries from the World Bank database and create charts.
 
@@ -12,10 +12,8 @@ Communcation between front and backend using GraphQL.
 - Django 4.0
 - Redis 7.0.7
 - Vue 3.2
-- Vite 2.3
-- Vitest 0.21
 - Bootstrap 5.2
-- Cypress 12.1.0
+- Cypress 12.2.0
 
 ## Author ##
 

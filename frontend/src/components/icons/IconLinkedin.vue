@@ -1,5 +1,6 @@
 <template>
   <svg
+    id="linkedin-icon"
     width="50"
     height="49"
     viewBox="0 0 50 49"

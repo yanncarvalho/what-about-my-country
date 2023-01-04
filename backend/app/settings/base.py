@@ -12,10 +12,24 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 from typing import Dict, Union
+from django.core.management.commands.runserver import Command as runserver
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# BDefine port and address
+runserver.default_port = os.getenv('BACKEND_PORT')
+runserver.default_addr = os.getenv('BACKEND_ADDRESS')
+
+# Secutiry
+SECURE_HSTS_INCLUDE_SUBDOMAINS= False
+SECURE_HSTS_SECONDS= 0
+SECURE_CONTENT_TYPE_NOSNIFF= False
+SECURE_SSL_REDIRECT= False
+SECURE_HSTS_PRELOAD= False
+SESSION_COOKIE_SECURE= False
+CSRF_COOKIE_SECURE= False
 
 INSTALLED_APPS = [
     'app.api.apps.ApiConfig',
@@ -61,7 +75,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -88,9 +101,6 @@ FROM_NET_KEY_TO_DICT_VALUE: Dict[str, Dict[str, str]] = {
     API_INDICATOR_URL+'/SI.POV.GINI': {'id': 'giniIndex', 'name': 'Gini index'},
     API_INDICATOR_URL+'/EG.ELC.ACCS.ZS': {'id': 'eletricityAccess', 'name': 'Access to electricity'},
 }
-
-
-
 
 API_URL_ROOT: str = 'api.worldbank.org'
 API_VERSION: str = 'v2'

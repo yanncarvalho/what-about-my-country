@@ -8,12 +8,7 @@ module.exports = {
     "eslint:recommended",
     "@vue/eslint-config-prettier",
     "plugin:vue/base",
-  ],
-  overrides: [
-    {
-      files: ["test/e2e/**/*.{cy,spec}.{js,ts,jsx,tsx}"],
-      extends: ["plugin:cypress/recommended"],
-    },
+    "plugin:cypress/recommended",
   ],
   parserOptions: {
     ecmaVersion: "latest",

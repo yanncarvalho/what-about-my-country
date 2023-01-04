@@ -1,13 +1,13 @@
 <script setup>
 import SocialMediaLink from "./SocialMediaLink.vue";
-const logoPath = __APP_ENV__.LOGO_PATH;
 </script>
 <template>
   <footer
     class="bg-headfoot p-5 mt-5 mb-0 text-center container-fluid d-sm-inline-flex justify-content-center align-items-center"
   >
     <img
-      :src="logoPath"
+      id="logo-footer"
+      src="@/assets/images/logo.svg"
       alt="App logo"
       class="me-sm-5 logo-img-sm-resize pb-sm-20px pt-1"
       width="200"
@@ -15,8 +15,8 @@ const logoPath = __APP_ENV__.LOGO_PATH;
     />
 
     <span>
-      <p class="text-sm-center fs-4">
-        ©2022 by Yann Carvalho.
+      <p class="text-sm-center fs-4" id="copyright-footer">
+        ©2023 by Yann Carvalho.
         <br />
         All Rights Reserved.
       </p>

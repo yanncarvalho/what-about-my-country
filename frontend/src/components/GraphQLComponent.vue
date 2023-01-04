@@ -4,6 +4,10 @@ import { gql } from "graphql-tag";
 import { computed, watch } from "vue";
 
 const props = defineProps({
+  idBase: {
+    type: String,
+    required: true,
+  },
   query: {
     type: String,
     required: true,
@@ -17,7 +21,6 @@ const props = defineProps({
     default: "It was not possible to load",
   },
 });
-
 const { result, error, loading } = useQuery(
   computed(() => {
     return gql`
@@ -25,7 +28,6 @@ const { result, error, loading } = useQuery(
     `;
   })
 );
-
 const emit = defineEmits(["onResult"]);
 
 watch(result, (res) => {
@@ -35,7 +37,8 @@ watch(result, (res) => {
 
 <template>
   <div
-    ref="error"
+    ref="error-div"
+    :id="`error-${idBase}`"
     v-if="error"
     class="alert alert-danger text-center"
     role="alert"
@@ -43,7 +46,8 @@ watch(result, (res) => {
   ></div>
 
   <div
-    ref="loading"
+    ref="loading-div"
+    :id="`loading-${idBase}`"
     v-else-if="loading"
     class="alert alert-dark text-center"
     role="alert"

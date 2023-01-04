@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
+import RequestInformation from "@/components/RequestInformation.vue";
 import { shallowMount } from "@vue/test-utils";
-import RequestInformation from "src/components/RequestInformation.vue";
+import { describe, expect, it } from "vitest";
 
 describe("Test Component RequestInformation", () => {
   /**

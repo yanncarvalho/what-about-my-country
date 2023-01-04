@@ -7,7 +7,7 @@ class ApiConfig(AppConfig):
     verbose_name: str = 'countries info api'
 
     def ready(self) -> None:
-      if(os.environ.get("BACKEND_ENVIRONMENT") == 'prod'):
+      if(os.environ.get("APP_ENVIRONMENT") == 'prod'):
         RedisFactory.redis_connected_or_exception()
 
 

@@ -1,4 +1,3 @@
-
 from typing import Union
 
 from django.conf import settings as conf

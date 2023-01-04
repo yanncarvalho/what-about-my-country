@@ -1,12 +1,16 @@
 <script setup>
 import LogoHeaderText from "./LogoHeaderText.vue";
-const logoPath = __APP_ENV__.LOGO_PATH;
 </script>
 
 <template>
-  <h1 class="justify-content-center text-center" role="presentation">
+  <h1
+    class="justify-content-center text-center"
+    role="presentation"
+    id="logo-header"
+  >
     <img
-      :src="logoPath"
+      id="logo-image"
+      src="@/assets/images/logo.svg"
       alt="App logo"
       class="logo-img-880-resize me-1"
       width="110"

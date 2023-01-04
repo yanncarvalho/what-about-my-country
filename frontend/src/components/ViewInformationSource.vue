@@ -5,9 +5,10 @@ const referenceSrc = {
 };
 </script>
 <template>
-  <small class="text-muted">
+  <small class="text-muted" id="reference-source">
     Source:&nbsp;
     <a
+      id="reference-source-link"
       :href="referenceSrc.url"
       target="_blank"
       :title="referenceSrc.name"

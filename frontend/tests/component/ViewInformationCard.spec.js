@@ -1,5 +1,5 @@
+import ViewInformationCard from "@/components/ViewInformationCard.vue";
 import { mount } from "@vue/test-utils";
-import ViewInformationCard from "src/components/ViewInformationCard.vue";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { countryInfoMock } from "../commonMock.js";
 
@@ -9,6 +9,7 @@ describe("Test Component ViewInformationCard", () => {
     global.__APP_ENV__ = vi.fn();
     propsMock = {
       countryInfo: countryInfoMock,
+      idBase: "",
     };
   });
 

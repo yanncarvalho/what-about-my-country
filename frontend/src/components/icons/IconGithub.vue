@@ -1,5 +1,6 @@
 <template>
   <svg
+    id="github-icon"
     width="52"
     height="50"
     viewBox="0 0 52 50"

@@ -6,19 +6,18 @@ from .models_country import Country
 
 class Populate(Thread):
   """Populate class implemention methods to populate the database"""
-  _is_population: bool = False
+  _is_populating: bool = False
 
   def run(self):
     """start the population database of if process was not running"""
-    if Populate._is_population is False:
-     Populate._is_population = True
+    if Populate._is_populating is False:
+     Populate._is_populating = True
      self.start_populations()
-     Populate._is_population = False
+     Populate._is_populating = False
 
   @staticmethod
   def start_countries() -> None:
     """start the country Population"""
-
     keys: Set[str] =  set( val['id'] for val in Country.all_keys_n_name_from_net())
     try:
       async def async_countries(keys: Set[str]):

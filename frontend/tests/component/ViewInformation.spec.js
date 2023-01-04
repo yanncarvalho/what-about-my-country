@@ -1,5 +1,5 @@
+import ViewInformation from "@/components/ViewInformation.vue";
 import { shallowMount } from "@vue/test-utils";
-import ViewInformation from "src/components/ViewInformation.vue";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   chartDataMock,
@@ -7,14 +7,15 @@ import {
   resultWithIndicatorsEmptyMock,
 } from "../commonMock.js";
 
-vi.mock("/src/common/helpers.js");
+vi.mock("@/common/helpers.js");
 describe("Test Component ViewInformation", () => {
   let propsMock;
   beforeEach(() => {
     propsMock = {
       countries: {
-        countries: {},
-        indicators: {},
+        country: [],
+        indicators: [],
+        idBase: "",
       },
     };
   });
@@ -95,7 +96,7 @@ describe("Test Component ViewInformation", () => {
   describe("Test scroll page", () => {
     let helpersMock;
     beforeEach(async () => {
-      helpersMock = await import("/src/common/helpers.js");
+      helpersMock = await import("@/common/helpers.js");
       helpersMock.scrollToId = vi.fn();
     });
 

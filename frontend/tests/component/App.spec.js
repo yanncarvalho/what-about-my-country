@@ -1,9 +1,9 @@
 /* eslint-disable no-undef */
+import App from "@/App.vue";
 import { shallowMount } from "@vue/test-utils";
-import App from "src/App.vue";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("/src/common/helpers.js");
+vi.mock("@/common/helpers.js");
 describe("Test Component App", () => {
   let onResultMock;
   beforeEach(async () => {

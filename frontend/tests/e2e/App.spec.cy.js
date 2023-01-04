@@ -29,7 +29,7 @@ describe("End-to-End SPA tests", () => {
     //Act
     addCountry(countries[0]);
     addCountry(countries[1]);
-    cy.get("#showCountriesBtn").click();
+    cy.get('[data-cy="showCountriesBtn"]').click();
 
     //Assert
     cy.get(countryCard(0)).contains(countries[0]);
@@ -39,12 +39,12 @@ describe("End-to-End SPA tests", () => {
   it("should show chart", () => {
     //Arrange
     const chartFirstOption = ".tags-input-typeahead-item-highlighted-default";
-    const chartView = "[id^=viewInformationChart] > #line-chart";
+    const chartView = "[data-cy='chart-view']";
 
     //Act
     addCountry(countries[0]);
     cy.get(chartFirstOption).click();
-    cy.get("#showCountriesBtn").click();
+    cy.get('[data-cy="showCountriesBtn"]').click();
 
     //Assert
     cy.get(chartView).should("have.length", 1);
@@ -55,9 +55,9 @@ describe("End-to-End SPA tests", () => {
     addCountry(countries[0]);
 
     //Act
-    cy.get("#showCountriesBtn").click();
+    cy.get('[data-cy="showCountriesBtn"]').click();
 
     //Assert
-    cy.get("#showCountriesBtn").should("is.disabled");
+    cy.get('[data-cy="showCountriesBtn"]').should("is.disabled");
   });
 });

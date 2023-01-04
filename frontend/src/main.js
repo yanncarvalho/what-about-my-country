@@ -11,10 +11,9 @@ const cache = new InMemoryCache({
 });
 
 const _ = __APP_ENV__;
-
 const apolloClient = new ApolloClient({
   cache,
-  uri: `${_.BACKEND_PROTOCOL}://${_.BACKEND_ADRESS}:${_.BACKEND_PORT}/${_.BACKEND_COUNTRY_ROUTE}`,
+  uri: `${_.BACKEND_PROTOCOL}://${_.BACKEND_ADDRESS}:${_.BACKEND_PORT}/${_.BACKEND_COUNTRY_ROUTE}`,
 });
 
 const app = createApp(App);

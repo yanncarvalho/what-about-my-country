@@ -1,0 +1,119 @@
+name: build
+
+on: [pull_request, push]
+env:
+    backend-directory: ./backend
+    frontend-directory: ./frontend
+jobs:
+
+  unit-test-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{env.backend-directory}}
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run Unit Tests
+      run: python -m unittest -v
+
+  unit-test-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{env.frontend-directory}}/
+    strategy:
+      matrix:
+        node-version:  [16.x, 18.x, 19.x]
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: '${{env.frontend-directory}}/package-lock.json'
+
+    - name: Install packages
+      run: npm install
+
+    - name: Run Unit Tests
+      run: npm run test:unit
+
+    - name: Build Aplication
+      run: npm run build
+
+  end2end-test:
+    env:
+      APP_ENVIRONMENT: prod
+      REDIS_PORT: 6379
+      REDIS_HOST: 0.0.0.0
+      BACKEND_SECRET_KEY: any_secret
+      REDIS_DECODE_RESPONSES: true
+      BACKEND_ADDRESS: 127.0.0.1
+      BACKEND_PORT: 9000
+      FRONTEND_ADDRESS: 127.0.0.1
+      FRONTEND_PORT: 9090
+      BACKEND_COUNTRY_ROUTE: api/v1/country
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+         - 6379:6379
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: 'pip'
+
+      - name: Install Backend Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r ${{env.backend-directory}}/requirements.txt
+
+      - name: Run Populate Redis
+        run: python ${{env.backend-directory}}/manage.py populate_redis
+
+      - name: Run Backend
+        run: python ${{env.backend-directory}}/manage.py runserver &
+
+      - name: Test End-to-End
+        uses: cypress-io/github-action@v3
+        with:
+            install: npm install
+            start: npx vite --port=${{env.FRONTEND_PORT}}
+            working-directory: ${{env.frontend-directory}}/
+            config: |
+                  baseUrl=http://${{env.FRONTEND_ADDRESS}}:${{env.FRONTEND_PORT}}
+
+      - name: Save cypress screens if failure
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cypress-screens
+          path: ${{env.frontend-directory}}/cypress/
+
+      - name: Save backend log
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-log
+          path: ./backend.log

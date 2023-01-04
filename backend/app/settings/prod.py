@@ -1,16 +1,14 @@
 import os
-from .base import *
 
 DEBUG = os.getenv('BACKEND_DEBUG').lower() == 'true'
 
 SECRET_KEY = os.getenv('BACKEND_SECRET_KEY')
 
 ALLOWED_HOSTS = [os.getenv('BACKEND_ALLOWED_HOSTS')]
+
 #=---------------- CORS -----------------=#
-CORS_ORIGIN_ALLOW_ALL = os.getenv('BACKEND_CORS_ORIGIN_ALLOW_ALL').lower() == 'true'
-CORS_ORIGIN_WHITELIST = (
-    os.getenv('BACKEND_CORS_ORIGIN_URL')
-)
+CORS_ORIGIN_ALLOW_ALL = os.getenv('BACKEND_CORS_ORIGIN_ALLOW_ALL', 'true').lower() == 'true'
+
 
 #=---------------- LOGGING SETTINGS -----------------=#
 LOGGING = {
@@ -30,7 +28,7 @@ LOGGING = {
         'log_file': {
 
             'class': 'logging.FileHandler',
-            'filename': 'api.log',
+            'filename': 'backend.log',
             'formatter': 'verbose',
         },
         'console': {
@@ -39,7 +37,7 @@ LOGGING = {
         },
     },
     'root': {
-        'handlers': ['console'],
+        'handlers': ['log_file'],
     },
     'app.api': {
         'handlers': ['log_file'],
