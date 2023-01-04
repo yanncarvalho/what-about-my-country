@@ -132,6 +132,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+.envs/
+.env
 .venv
 env/
 venv/
@@ -343,3 +345,6 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+#Jsdoc
+out/

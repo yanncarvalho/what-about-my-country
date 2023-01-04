@@ -2,60 +2,60 @@
  * type of `DataIndicator`
  *
  * @typedef {array} DataIndicator
- * @property {number} year
- * @property {number} value
+ * @property {number} year - data year
+ * @property {number} value - data value
  */
 
 /**
  * type of `IdValue`
  *
- * @typedef {object} IdValue
- * @property {string} id
- * @property {string} value
+ * @typedef {object} IdValue - onject
+ * @property {string} id  - Id of IdValue
+ * @property {string} value - Value of IdValue
  */
 
 /**
  * type of `Indicator`
  *
  * @typedef {object} Indicator
- * @property {string} id
- * @property {string} description
- * @property {DataIndicator} data
+ * @property {string} id - Indicator id
+ * @property {string} description - Indicator description
+ * @property {DataIndicator} data - Indicator data
  */
 
 /**
  * type of `Country`
  *
  * @typedef {object} Country
- * @property {string} id
- * @property {string} name
- * @property {string} capitalCity
- * @property {number} latitude
- * @property {number} longitude
- * @property {string} region
- * @property {string} incomeLevel
- * @property {[Indicator]} indicators
+ * @property {string} id - Country id
+ * @property {string} name - Country name
+ * @property {string} capitalCity - Country capital city
+ * @property {number} latitude - Country latitude
+ * @property {number} longitude - Country longitude
+ * @property {string} region - Country region
+ * @property {string} incomeLevel - Country incomeLevel
+ * @property {Array.<Indicator>} indicators  - Country indicators
  */
 
 /**
  * type of `DataChart`
  *
  * @typedef {object} DataChart
- * @property {string} id
- * @property {string} description
- * @property {string} labels
- * @property {[DataChartDataset]} datasets
- * @property {set} countryIds
+ * @property {string} id  - DataChart id
+ * @property {string} description - DataChart description
+ * @property {string} labels  - DataChart labels
+ * @property {Array.<DataChartDataset>} datasets - Array of datasets
+ * @property {set} countryIds - Set with country ids
  */
 
 /**
  * type of `DataChartDataset`
  *
  * @typedef {object} DataChartDataset
- * @property {string} label
- * @property {string} borderColor
- * @property {boolean} fill
- * @property {[number]} data
+ * @property {string} label - DataChartDataset label
+ * @property {string} borderColor - DataChartDataset borderColor
+ * @property {boolean} fill - if chart value representation must be fill
+ * @property {Array.<number>} data - Array of number
  */
 
 /**
@@ -96,7 +96,7 @@ export function stringifyKeyObj(obj) {
 
 /**
  * @description convert an indicator to a datachart
- * @param {[IdValue]} indicatorIdValue indicatorIdValue to be converted
+ * @param {Array.<IdValue>} indicatorIdValue indicatorIdValue to be converted
  * @returns {DataChart} dataChart from an indicator
  */
 function convIndiToDataChart(indicatorIdValue) {
@@ -118,7 +118,7 @@ function convIndiToDataChart(indicatorIdValue) {
 /**
  * @description generate indicator chart parameters
  * @param {Indicator} indicator indicator
- * @param {[Country]} countries countries
+ * @param {Array.<Country>} countries countries
  * @returns { DataChart} dataChart from an indicator
  */
 export function genChartsIndicator(indicator, countries) {

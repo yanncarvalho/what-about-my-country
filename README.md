@@ -1,6 +1,7 @@
 # What about my country? #
 
-[![build](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/build.yml)
+[![Tests](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/tests.yml)
+[![Quality](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/quality.yml/badge.svg?branch=main)](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/quality.yml)
 
 A web application that provides information about different countries from the World Bank database and create charts.
 

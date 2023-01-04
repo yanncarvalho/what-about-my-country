@@ -1,3 +1,4 @@
+"""Development profile."""
 DEBUG = True
 SECRET_KEY = 'very_secret_password'
 ALLOWED_HOSTS = ['*']

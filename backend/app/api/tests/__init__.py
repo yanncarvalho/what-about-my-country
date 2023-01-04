@@ -1,3 +1,4 @@
+"""Test init"""
 import os
 import logging
 

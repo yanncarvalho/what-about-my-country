@@ -1,3 +1,4 @@
+"""GraphQL schemas"""
 import asyncio
 from typing import Dict, List, Tuple
 from ariadne import ObjectType, SchemaDirectiveVisitor, make_executable_schema
@@ -27,6 +28,8 @@ def _from_tuple_to_str_enum(value: Tuple[Dict[str, str]]) -> str:
 __fields: Dict[str, str] = dict(conf.FROM_NET_KEY_TO_DICT_VALUE)
 __fields.pop(conf.API_BASIC_INFO_URL, None)
 __fields_id: Tuple[Dict[str, str]] = tuple(__fields.values())
+indicators_id: str = _from_tuple_to_str_enum(__fields_id)
+country_codes: str = _from_tuple_to_str_enum(Country.all_keys_n_name_from_net())
 
 schema_graphql = '''
     directive @zeroOrPositive on ARGUMENT_DEFINITION
@@ -90,20 +93,17 @@ schema_graphql = '''
         value: Float!
     }
 
-''' + '''
+''' + f'''
     """
     Enumerator with all possible country indicators
     """
-    enum IndicatorId {fields}
+    enum IndicatorId {indicators_id}
 
     """
     Country [iso2Code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
     """
-    enum Code {codes_enum}
-'''.format(
-    fields=_from_tuple_to_str_enum(
-        __fields_id),  # dynamic field formatting for graphql request
-    codes_enum=_from_tuple_to_str_enum(Country.all_keys_n_name_from_net()))  # dynamic country id  formatting for graphql request
+    enum Code {country_codes}
+'''
 
 query = ObjectType('Query')
 
@@ -118,11 +118,11 @@ def _resolve_country(*_, codes):
           List of country fields
     """
     fields_list: List[Field] = []
-    for cd in codes:
-        country = Country(cd)
-        if(country.is_empty()):
-            asyncio.run(country.save_from_net(cd))
-        fields = country.get_fields()
+    for code in codes:
+        countries = Country(code)
+        if countries.is_empty():
+            asyncio.run(countries.save_from_net(code))
+        fields = countries.get_fields()
         fields_list.append(fields)
     return fields_list
 
@@ -188,6 +188,7 @@ def _resolve_indicator(indicartor, info):
 
 
 @indicator.field('data')
+# pylint: disable=invalid-name
 def _resolve_data(indicators, _, minYear: int):
     """ GraphQL Type data resolve
 
@@ -208,6 +209,7 @@ data = ObjectType('Data')
 
 @data.field('value')
 @data.field('year')
+# pylint: disable=redefined-outer-name
 def _resolve_data_elements(data, info):
     """ GraphQL Type data resolver
 

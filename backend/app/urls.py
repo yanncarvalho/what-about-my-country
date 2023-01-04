@@ -1,3 +1,4 @@
+"""Django URLs path."""
 from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
 from .api.views import error_404, error_500, CountryViewVersionOne

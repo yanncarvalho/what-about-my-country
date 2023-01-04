@@ -1,3 +1,4 @@
+"""Production profile."""
 import os
 
 DEBUG = os.getenv('BACKEND_DEBUG').lower() == 'true'
@@ -50,4 +51,3 @@ LOGGING = {
         },
     },
 }
-

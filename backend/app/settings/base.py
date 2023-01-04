@@ -23,13 +23,13 @@ runserver.default_port = os.getenv('BACKEND_PORT')
 runserver.default_addr = os.getenv('BACKEND_ADDRESS')
 
 # Secutiry
-SECURE_HSTS_INCLUDE_SUBDOMAINS= False
-SECURE_HSTS_SECONDS= 0
-SECURE_CONTENT_TYPE_NOSNIFF= False
-SECURE_SSL_REDIRECT= False
-SECURE_HSTS_PRELOAD= False
-SESSION_COOKIE_SECURE= False
-CSRF_COOKIE_SECURE= False
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_SECONDS = 0
+SECURE_CONTENT_TYPE_NOSNIFF = False
+SECURE_SSL_REDIRECT = False
+SECURE_HSTS_PRELOAD = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
 INSTALLED_APPS = [
     'app.api.apps.ApiConfig',
@@ -89,17 +89,23 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 
-#=---------------- COUNTRY API SETTINGS -----------------=#
+# =---------------- COUNTRY API SETTINGS -----------------=#
 API_INDICATOR_URL: str = 'indicator'
 API_BASIC_INFO_URL: str = ''
 FROM_NET_KEY_TO_DICT_VALUE: Dict[str, Dict[str, str]] = {
     # world_api_url : dict{ id: "applicationId"; name: "description of the id" }
-    API_BASIC_INFO_URL                    : {'id' :  'basicInfo', 'name' : 'Basic country info'},
-    API_INDICATOR_URL+'/NY.GDP.MKTP.CD'   : {'id' :  'GDP', 'name' : 'GDP (current US$)'},
-    API_INDICATOR_URL+'/SP.POP.TOTL'      : {'id':  'totalPopulation', 'name': 'Total population'},
-    API_INDICATOR_URL+'/SE.ADT.1524.LT.ZS': {'id' : 'literacyRate', 'name' : 'Literacy rate, youth population'},
-    API_INDICATOR_URL+'/SI.POV.GINI': {'id': 'giniIndex', 'name': 'Gini index'},
-    API_INDICATOR_URL+'/EG.ELC.ACCS.ZS': {'id': 'eletricityAccess', 'name': 'Access to electricity'},
+    API_BASIC_INFO_URL:
+        {'id':  'basicInfo', 'name': 'Basic country info'},
+    API_INDICATOR_URL+'/NY.GDP.MKTP.CD':
+        {'id':  'GDP', 'name': 'GDP (current US$)'},
+    API_INDICATOR_URL+'/SP.POP.TOTL':
+        {'id':  'totalPopulation', 'name': 'Total population'},
+    API_INDICATOR_URL+'/SE.ADT.1524.LT.ZS':
+        {'id': 'literacyRate', 'name': 'Literacy rate, youth population'},
+    API_INDICATOR_URL+'/SI.POV.GINI':
+        {'id': 'giniIndex', 'name': 'Gini index'},
+    API_INDICATOR_URL+'/EG.ELC.ACCS.ZS':
+        {'id': 'eletricityAccess', 'name': 'Access to electricity'},
 }
 
 API_URL_ROOT: str = 'api.worldbank.org'
@@ -107,7 +113,7 @@ API_VERSION: str = 'v2'
 API_COUNTRY_URL: str = '/'.join((API_VERSION, 'country'))
 
 
-#=---------------- REDIS SETTINGS -----------------=#
+# =---------------- REDIS SETTINGS -----------------=#
 RedisVal = Union[str, bool, int]
 REDIS: Dict[str, RedisVal] = {
     'host': os.getenv('REDIS_HOST'),
