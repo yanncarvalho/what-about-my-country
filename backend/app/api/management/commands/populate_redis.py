@@ -12,4 +12,4 @@ class Command(BaseCommand):
         thread = Country.trigger_save_all_countries()
         thread.start()
         thread.join()
-        self.stdout.write('finished Redis population')
+        self.stdout.write('Redis has successfully populated')

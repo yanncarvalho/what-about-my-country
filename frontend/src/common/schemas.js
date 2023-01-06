@@ -4,8 +4,8 @@
  * @param {string} ids indicitors ids
  * @returns {string} graphQl query
  */
-export const selectCountries = (codes, ids) => `
-   {
+export const selectCountries = (codes, ids) =>
+  ` {
     country(codes:  ${codes} ) {
       id,
       name,

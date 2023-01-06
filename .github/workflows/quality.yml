@@ -1,12 +1,13 @@
 name: Quality
 
 on: [pull_request, push]
+
 env:
     backend-directory: ./backend
     frontend-directory: ./frontend
-jobs:
 
-  backend-validation:
+jobs:
+  backend-quality:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -26,9 +27,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Linter validation
-        run: python -m pylint * --ignore=venv,requirements.txt
+        run: python -m pylint * --ignore=venv,requirements.txt,Dockerfile
 
-  frontend-validation:
+  frontend-quality:
     runs-on: ubuntu-latest
     defaults:
       run:

@@ -1,11 +1,12 @@
 name: Tests
 
 on: [pull_request, push]
+
 env:
     backend-directory: ./backend
     frontend-directory: ./frontend
-jobs:
 
+jobs:
   unit-backend:
     runs-on: ubuntu-latest
     defaults:
@@ -49,7 +50,7 @@ jobs:
 
     - name: Install Packages
       run: npm install
-      
+
     - name: Run Unit Tests
       run: npm run test:unit
 
