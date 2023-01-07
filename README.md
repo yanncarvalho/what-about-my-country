@@ -1,7 +1,7 @@
 # What about my country? #
 
-[![Tests](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/tests.yml)
-[![Quality](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/quality.yml/badge.svg?branch=main)](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/quality.yml)
+[![Tests](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/tests.yml/badge.svg)](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/tests.yml)
+[![Docker push](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/docker.yml/badge.svg?branch=main)](https://github.com/yanncarvalho/what-about-my-country/actions/workflows/docker.yml)
 
 A web application that provides information about different countries from the World Bank database and create charts.
 
@@ -10,7 +10,7 @@ Communcation between front and backend using GraphQL.
 ## Built with ##
 
 - Python 3.10
-- Django 4.0
+- Django 4.1
 - Redis 7.0.7
 - Vue 3.2
 - Bootstrap 5.2

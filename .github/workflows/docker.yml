@@ -1,0 +1,47 @@
+name: Docker push
+
+on:
+  workflow_run:
+    workflows: [Tests]
+    types: [completed]
+    branches: [main]
+env:
+  backend-directory: ./backend
+  frontend-directory: ./frontend
+jobs:
+  push-images:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Docker Login
+      uses: docker/login-action@v2.0.0
+      with:
+        username: yanncarvalho
+        password: ${{ secrets.PASSWORD_DOCKER_HUB }}
+
+    - name: Build and push frontend Docker images
+      uses: docker/build-push-action@v3.0.0
+      with:
+        context: ${{env.frontend-directory}}/
+        file: ${{env.frontend-directory}}/Dockerfile
+        push: true
+        tags: |
+          yanncarvalho/wbmc-frontend:latest
+          yanncarvalho/wbmc-frontend:${{ github.sha }}
+
+    - name: Build and push backend Docker images
+      uses: docker/build-push-action@v3.0.0
+      env:
+          APP_ENVIRONMENT: prod
+          BACKEND_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          BACKEND_ADDRESS: 0.0.0.0
+          BACKEND_PORT: 9090
+      with:
+        context: ${{env.backend-directory}}/
+        file: ${{env.backend-directory}}/Dockerfile
+        push: true
+        tags: |
+          yanncarvalho/wbmc-backend:latest
+          yanncarvalho/wbmc-backend:${{ github.sha }}

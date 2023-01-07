@@ -10,7 +10,6 @@ services:
       - REDIS_PORT=${REDIS_PORT}
       - BACKEND_SECRET_KEY=${BACKEND_SECRET_KEY}
       - REDIS_HOST=redis
-      - BACKEND_ADDRESS=${BACKEND_ADDRESS}
     networks:
       - wbcm-backend
       - wbcm-frontend
@@ -28,6 +27,36 @@ services:
     ports:
       - ${REDIS_PORT}:${REDIS_PORT}
 
+  migration:
+    image: python:3.10-alpine
+    container_name: wbmc-migration
+    working_dir: /backend
+    command: sh -c "
+        pip install --upgrade pip &&
+        pip install -r requirements.txt &&
+        python3 manage.py populate_redis"
+    environment:
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_HOST=redis
+    volumes:
+      - ./backend:/backend
+    networks:
+      - wbcm-backend
+    depends_on:
+      - redis
+
+  frontend:
+    container_name: wbmc-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - BACKEND_ADDRESS=0.0.0.0
+        - BACKEND_PORT=${CONTAINER_BACKEND_PORT}
+    ports:
+      - ${CONTAINER_FRONTEND_PORT}:80
+    networks:
+      - wbcm-frontend
 
 networks:
   wbcm-frontend:
