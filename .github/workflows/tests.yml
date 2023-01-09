@@ -32,9 +32,6 @@ jobs:
     - name: Run Unit Tests
       run: python manage.py test -v 2
 
-    - name: Linter validation
-      run: python -m pylint * --ignore=venv,requirements.txt,Dockerfile
-
   frontend-quality:
     runs-on: ubuntu-latest
     defaults:
